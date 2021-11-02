@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 
 @Slf4j
@@ -25,16 +27,9 @@ public class ParsingController {
 
     @GetMapping("/parsing")
     @ApiOperation(value="전체 정보 파싱" , notes="해당 API 호출 시 주식 정보를 리턴해줌")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name="a" , value = "걍 테스트용 a변수에 대한 설명", defaultValue = "디폴트값")
-//    })
-    public ResponseEntity<HashMap<String,Object>> testParsing(){
-        HashMap<String,Object> hashMap = new HashMap<>();
-
-        hashMap.put("zzzz","zzzaaaz");
-
-
-        return new ResponseEntity<>(hashMap, HttpStatus.OK);
+    public ResponseEntity<List<LinkedHashMap<String,String>>> parsingAllStock() throws Exception{
+        List<LinkedHashMap<String,String>>  parsingList = parsingService.parsingAllStock();
+        return new ResponseEntity<>(parsingList, HttpStatus.OK);
     }
 
     @GetMapping("/parsing/{stockCode}")
@@ -42,9 +37,15 @@ public class ParsingController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="stockCode" , value = "주식 종목 코드", defaultValue = "005930")
     })
-    public ResponseEntity<HashMap<String,String>> testParsing(@PathVariable("stockCode") String stockCode) throws Exception{
-        HashMap<String,String> hashMap = parsingService.parsingOneStock(stockCode);
-        return new ResponseEntity<>(hashMap, HttpStatus.OK);
+    public ResponseEntity<LinkedHashMap<String,String>> parsingOneStock(@PathVariable("stockCode") String stockCode) throws Exception{
+        LinkedHashMap<String,String> parsingMap = parsingService.parsingOneStock(stockCode);
+        return new ResponseEntity<>(parsingMap, HttpStatus.OK);
     }
+
+    @GetMapping("/test")
+    public void test()throws Exception{
+        parsingService.test();
+    }
+
 
 }
