@@ -100,6 +100,19 @@ public class ParsingService {
         hashMap.put("거래량",elements.get(10).text());
         hashMap.put("거래대금",elements.get(11).text());
 
+//        System.out.println("### elements.get(0) : " + elements.get(0));
+//        System.out.println("### elements.get(1) : " + elements.get(1));
+//        System.out.println("### elements.get(2) : " + elements.get(2));
+//        System.out.println("### elements.get(3) : " + elements.get(3));
+//        System.out.println("### elements.get(4) : " + elements.get(4));
+//        System.out.println("### elements.get(5) : " + elements.get(5));
+//        System.out.println("### elements.get(6) : " + elements.get(6));
+//        System.out.println("### elements.get(7) : " + elements.get(7));
+//        System.out.println("### elements.get(8) : " + elements.get(8));
+//        System.out.println("### elements.get(9) : " + elements.get(9));
+//        System.out.println("### elements.get(10) : " + elements.get(10));
+//        System.out.println("### elements.get(11) : " + elements.get(11));
+
 
         //외국인 , 기관 동향을 가져옴
         Element element = doc.select("div.sub_section.right table.tb_type1 tbody tr").get(1);
