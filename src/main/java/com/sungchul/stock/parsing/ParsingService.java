@@ -2,6 +2,7 @@ package com.sungchul.stock.parsing;
 
 
 import com.sungchul.stock.csv.CSVService;
+import com.sungchul.stock.util.DateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -24,15 +25,17 @@ public class ParsingService {
 
     CSVService csvService;
 
+    DateService dateService;
+
     @PostConstruct  //프로젝트 실행시 해당 메소드를 바로 실행
     public String aa(){
         return "abceef";
     }
 
 
-    public List<LinkedHashMap<String,String>> parsingAllStock() throws Exception{
+    public List<ParsingVO> parsingAllStock() throws Exception{
         List<List<String>> stockList = csvService.readToList();
-        List<LinkedHashMap<String,String>> parsingList = new ArrayList<>();
+        List<ParsingVO> parsingList = new ArrayList<>();
         for(List list: stockList){
             parsingList.add(parsingOneStock(list.get(0).toString()));
         }
@@ -75,8 +78,9 @@ public class ParsingService {
     }
 
 
-    public LinkedHashMap<String,String> parsingOneStock(String stockCode)throws Exception{
+    public ParsingVO parsingOneStock(String stockCode)throws Exception{
 
+        ParsingVO parsingVO = new ParsingVO();
         LinkedHashMap<String,String> hashMap = new LinkedHashMap<>();
         //String url = "https://finance.naver.com/item/fchart.naver?code=005930";
         String url = "https://finance.naver.com/item/main.naver?code="+stockCode;
@@ -86,19 +90,59 @@ public class ParsingService {
         Document doc = Jsoup.connect(url).get();
         //가져온 HTMl문서에서 ID가 wrap인 태그에 속하는 부분만 가져옴
         Elements elements = doc.select("#wrap").select("dl").get(0).select("dd");
+        Element element = doc.select("div.sub_section.right table.tb_type1 tbody tr").get(1);
 
         hashMap.put("기준",elements.get(0).text());
+        //String parsingDateDetail = elements.get(0).text().replaceAll("[^0-9]","");
+        String parsingDateDetail = dateService.getTime("yyyy-mm-dd HH:mm:ss");
+        parsingVO.setParsingDateDetail(parsingDateDetail);
+
         hashMap.put("종목명",elements.get(1).text());
+        String []stockName = elements.get(1).text().split("\\s");
+        parsingVO.setStockName(stockName[1]);
+
         hashMap.put("종목코드",elements.get(2).text());
+        parsingVO.setStockCode(stockCode);
+
         hashMap.put("현재가",elements.get(3).text());
+        String []currentPrice = elements.get(3).text().split("\\s");
+        parsingVO.setCurrentPrice(Integer.parseInt(currentPrice[1].replace(",","")));
+
         hashMap.put("전일가",elements.get(4).text());
+
+
         hashMap.put("시가",elements.get(5).text());
+
+
         hashMap.put("고가",elements.get(6).text());
+
+
         hashMap.put("상한가",elements.get(7).text());
+
+
         hashMap.put("저가",elements.get(8).text());
+
+
         hashMap.put("하한가",elements.get(9).text());
+
+
         hashMap.put("거래량",elements.get(10).text());
+
+
         hashMap.put("거래대금",elements.get(11).text());
+
+
+
+        hashMap.put("날짜",element.select("th").text());
+
+
+        hashMap.put("상승폭",element.select("td em").get(1).text());
+
+
+        hashMap.put("외국인 매매",element.select("td em").get(2).text());
+
+
+        hashMap.put("기관 매매",element.select("td em").get(3).text());
 
 //        System.out.println("### elements.get(0) : " + elements.get(0));
 //        System.out.println("### elements.get(1) : " + elements.get(1));
@@ -115,7 +159,6 @@ public class ParsingService {
 
 
         //외국인 , 기관 동향을 가져옴
-        Element element = doc.select("div.sub_section.right table.tb_type1 tbody tr").get(1);
 
 //        System.out.println(element.select("th").text());           //날짜
 //        System.out.println(element.select("td em").get(0).text());//가격
@@ -123,15 +166,14 @@ public class ParsingService {
 //        System.out.println(element.select("td em").get(2).text());//외국인
 //        System.out.println(element.select("td em").get(3).text());//기관
 
-        hashMap.put("날짜",element.select("th").text());
-        hashMap.put("상승폭",element.select("td em").get(1).text());
-        hashMap.put("외국인 매매",element.select("td em").get(2).text());
-        hashMap.put("기관 매매",element.select("td em").get(3).text());
+
+
+
 
 
 
         //System.out.println("#### 가격 : " + elements.select(".no_today").select(".blind").text());
 
-        return hashMap;
+        return parsingVO;
     }
 }

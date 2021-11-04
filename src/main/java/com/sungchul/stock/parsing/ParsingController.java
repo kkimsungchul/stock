@@ -1,9 +1,7 @@
 package com.sungchul.stock.parsing;
 
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,10 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 
+import java.rmi.ServerError;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -27,8 +28,8 @@ public class ParsingController {
 
     @GetMapping("/parsing")
     @ApiOperation(value="전체 정보 파싱" , notes="해당 API 호출 시 주식 정보를 리턴해줌")
-    public ResponseEntity<List<LinkedHashMap<String,String>>> parsingAllStock() throws Exception{
-        List<LinkedHashMap<String,String>>  parsingList = parsingService.parsingAllStock();
+    public ResponseEntity<List<ParsingVO>> parsingAllStock() throws Exception{
+        List<ParsingVO>  parsingList = parsingService.parsingAllStock();
         return new ResponseEntity<>(parsingList, HttpStatus.OK);
     }
 
@@ -37,14 +38,20 @@ public class ParsingController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="stockCode" , value = "주식 종목 코드", defaultValue = "005930")
     })
-    public ResponseEntity<LinkedHashMap<String,String>> parsingOneStock(@PathVariable("stockCode") String stockCode) throws Exception{
-        LinkedHashMap<String,String> parsingMap = parsingService.parsingOneStock(stockCode);
-        return new ResponseEntity<>(parsingMap, HttpStatus.OK);
+    public ResponseEntity<ParsingVO> parsingOneStock(@PathVariable("stockCode") String stockCode) throws Exception{
+        ParsingVO parsingVO = parsingService.parsingOneStock(stockCode);
+        return new ResponseEntity<>(parsingVO, HttpStatus.OK);
     }
 
     @GetMapping("/test")
-    public void test()throws Exception{
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = Map.class),
+            @ApiResponse(code = 403, message = "접근거부", response = HttpClientErrorException.Forbidden.class),
+            @ApiResponse(code = 500, message = "서버 에러", response = ServerError.class),
+    })
+    public ResponseEntity<ParsingVO> test(ParsingVO parsingVO )throws Exception{
         parsingService.test();
+        return new ResponseEntity<>(parsingVO,HttpStatus.OK);
     }
 
 
