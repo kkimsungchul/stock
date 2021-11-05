@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.5.6'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'war'
 }
 
 group = 'com.sungchul'
@@ -33,8 +34,18 @@ dependencies {
     
     //jsoup 사용을 위해 추가 (파싱)
     compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
+
+    //war배포를 위해 추가
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 }
 
 test {
     useJUnitPlatform()
+}
+
+
+bootWar{
+    archiveBaseName = '-'
+    archiveFileName = 'ROOT.war'
+    archiveVersion ='0.0.0'
 }
