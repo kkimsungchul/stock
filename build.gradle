@@ -37,6 +37,16 @@ dependencies {
 
     //war배포를 위해 추가
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+
+
+    //mybatis 사용을 위해 추가
+    compile 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
+    compile 'org.springframework.boot:spring-boot-starter-jdbc'
+    compile 'mysql:mysql-connector-java'
+
+    //log4j
+    implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
 }
 
 test {

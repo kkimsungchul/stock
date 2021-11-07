@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sungchul.stock.parsing.ParsingMapper"><!--namespace를 통해 UserDAO와 연결합니다. -->
+
+    <select id="test" resultType="com.sungchul.stock.parsing.StockVO">
+        SELECT * FROM stock_list
+    </select>
+
+    <insert id="insertStockInfo" parameterType="com.sungchul.stock.parsing.StockVO">
+        INSERT INTO stock_list (stock_code , stock_long_code , stock_name , stock_category_code , stock_category_name , insert_date)
+        VALUES (#{stockCode} , #{stockLongCode} , #{stockName} , #{stockCategoryCode} , #{stockCategoryName} , #{insertDate})
+    </insert>
+
+    <insert id="insertParsingData" parameterType="com.sungchul.stock.parsing.ParsingVO">
+        INSERT IGNORE INTO parsing_data
+            (stock_code ,parsing_date_detail ,parsing_date ,stock_name ,stock_category_code
+            ,stock_category_name ,present_price ,yesterday_price ,current_price ,high_price
+            ,upper_limit_price ,low_price ,lower_limit_price ,trading_volume ,trading_value
+            ,direction ,direction_code ,price_gap ,foreign_trade ,institution_trade ,parsing_memo)
+        VALUES
+            (#{stockCode} ,#{parsingDateDetail} ,#{parsingDate} ,#{stockName} ,#{stockCategoryCode}
+            ,#{stockCategoryName} ,#{presentPrice} ,#{yesterdayPrice} ,#{currentPrice} ,#{highPrice}
+            ,#{upperLimitPrice} ,#{lowPrice} ,#{lowerLimitPrice} ,#{tradingVolume} ,#{tradingValue}
+            ,#{direction} ,#{directionCode} ,#{priceGap} ,#{foreignTrade} ,#{institutionTrade} , #{parsingMemo})
+
+    </insert>
+
+    <select id="getStockList" resultType="com.sungchul.stock.parsing.StockVO">
+      SELECT
+      seq,
+      stock_code,
+      stock_long_code,
+      stock_name,
+      stock_category_code,
+      stock_category_name,
+      insert_date,
+      update_date
+      FROM stock_list
+    </select>
+
+    <!--<select id="getUserList" resultType="com.securus.ciim.user.vo.UserVO" parameterType="com.securus.ciim.user.vo.PageVO">-->
+        <!--SELECT-->
+        <!--C.pos_name,-->
+        <!--D.duty_name,-->
+        <!--A.idp_user_no,-->
+        <!--A.idp_user_id,-->
+        <!--A.idp_user_pw,-->
+        <!--A.idp_emp_code,-->
+        <!--A.idp_user_name,-->
+        <!--A.idp_user_nick,-->
+        <!--A.idp_user_posid,-->
+        <!--A.idp_user_spotid,-->
+        <!--A.idp_user_dutyid,-->
+        <!--A.idp_user_deptid,-->
+        <!--A.idp_user_ou,-->
+        <!--A.idp_user_sex,-->
+        <!--A.idp_user_mobile,-->
+        <!--A.idp_user_email,-->
+        <!--A.idp_user_seq,-->
+        <!--A.idp_user_homephone,-->
+        <!--A.idp_user_status,-->
+        <!--A.idp_user_modifydate,-->
+        <!--A.idp_user_modifyid,-->
+        <!--A.idp_user_deletedate,-->
+        <!--A.idp_user_deletetime,-->
+        <!--A.idp_user_deleteid,-->
+        <!--A.idp_user_add_deptid01,-->
+        <!--A.idp_user_ppss_posid01,-->
+        <!--A.idp_user_ppss_dutyid01,-->
+        <!--A.idp_user_add_deptid02,-->
+        <!--A.idp_user_ppss_posid02,-->
+        <!--A.idp_user_ppss_dutyid02,-->
+        <!--A.idp_user_regist_date,-->
+        <!--A.idp_user_regist_time,-->
+        <!--A.idp_end_dttm,-->
+        <!--A.idp_user_regstid,-->
+        <!--A.idp_admin_code,-->
+        <!--A.idp_user_description,-->
+        <!--A.idp_user_temp,-->
+        <!--A.idp_pw_modify_date,-->
+        <!--A.idp_pw_modify_expire,-->
+        <!--A.idp_user_mapping,-->
+        <!--B.dept_id,-->
+        <!--B.dept_name,-->
+        <!--B.dept_full_name-->
+        <!--FROM securus_idp_user A-->
+
+        <!--<choose>-->
+            <!--<when test="deptId == '' or deptId=='00000' or deptId==null">-->
+                <!--JOIN (-->
+                  <!--SELECT-->
+                  <!--dept_id, dept_name, fnc_dept_full_name(dept_id,0) as dept_full_name-->
+                  <!--FROM securus_dept-->
+                  <!--WHERE 1=1-->
+                  <!--AND dept_sv_id = #{deptSvId}) AS B-->
+                <!--ON A.idp_user_deptid = B.dept_id-->
+            <!--</when>-->
+            <!--<otherwise>-->
+                <!--JOIN (-->
+                    <!--SELECT-->
+                    <!--dept_id, dept_name, fnc_dept_full_name(dept_id,0) as dept_full_name-->
+                    <!--FROM securus_dept-->
+                    <!--WHERE dept_id = #{deptId} AND dept_status=1-->
+                    <!--AND dept_sv_id = #{deptSvId}-->
+                    <!--UNION ALL-->
+                    <!--SELECT-->
+                    <!--dept_id, dept_name, fnc_dept_full_name(dept_id,0) as dept_full_name-->
+                    <!--FROM (-->
+                      <!--SELECT * FROM securus_dept-->
+                        <!--WHERE 1=1-->
+                        <!--AND dept_sv_id = #{deptSvId}-->
+                    <!--) dept_sort_table, (SELECT @pv :=#{deptId}) initialisation-->
+                    <!--WHERE FIND_IN_SET(dept_par_id, @pv) >0-->
+                    <!--AND @pv := concat(@pv, ',', dept_id)-->
+                <!--)B ON A.idp_user_deptid = B.dept_id-->
+            <!--</otherwise>-->
+        <!--</choose>-->
+        <!--LEFT JOIN securus_pos C-->
+        <!--ON A.idp_user_posid = C.pos_id-->
+        <!--LEFT JOIN securus_duty D-->
+        <!--ON A.idp_user_dutyid = D.duty_id-->
+        <!--WHERE 1=1-->
+        <!--<if test="searchValue!='' and searchValue != null">-->
+            <!--AND ${searchColumn} LIKE CONCAT('%',#{searchValue},'%')-->
+        <!--</if>-->
+
+        <!--<choose>-->
+            <!--<when test="idpUserStatus == '4' or idpUserStatus=='' or idpUserStatus==null">-->
+                <!--AND idp_user_status !=4-->
+            <!--</when>-->
+            <!--<otherwise>-->
+                <!--AND idp_user_status =#{idpUserStatus}-->
+            <!--</otherwise>-->
+        <!--</choose>-->
+        <!--&lt;!&ndash;<if test="idpUserStatus!='' and idpUserStatus != null">&ndash;&gt;-->
+            <!--&lt;!&ndash;AND idp_user_status =#{idpUserStatus}&ndash;&gt;-->
+        <!--&lt;!&ndash;</if>&ndash;&gt;-->
+
+        <!--ORDER BY idp_user_no ${sortValue}-->
+        <!--LIMIT #{startIndex} , #{displayQuantity}-->
+    <!--</select>-->
+
+    <!--<select id="getTotalCount" parameterType="com.securus.ciim.user.vo.PageVO" resultType="Integer">-->
+        <!--SELECT-->
+        <!--COUNT(*)-->
+        <!--FROM securus_idp_user A-->
+
+        <!--<choose>-->
+            <!--<when test="deptId == '' or deptId=='00000' or deptId==null">-->
+                <!--JOIN (-->
+                <!--SELECT-->
+                <!--dept_id, dept_name, fnc_dept_full_name(dept_id,0) as dept_full_name-->
+                <!--FROM securus_dept-->
+                <!--WHERE 1=1-->
+                <!--AND dept_sv_id = #{deptSvId}) AS B-->
+                <!--ON A.idp_user_deptid = B.dept_id-->
+            <!--</when>-->
+            <!--<otherwise>-->
+                <!--JOIN (-->
+                <!--SELECT-->
+                <!--dept_id, dept_name, fnc_dept_full_name(dept_id,0) as dept_full_name-->
+                <!--FROM securus_dept-->
+                <!--WHERE dept_id = #{deptId} AND dept_status=1-->
+                <!--AND dept_sv_id = #{deptSvId}-->
+                <!--UNION ALL-->
+                <!--SELECT-->
+                <!--dept_id, dept_name, fnc_dept_full_name(dept_id,0) as dept_full_name-->
+                <!--FROM (-->
+                <!--SELECT * FROM securus_dept-->
+                <!--WHERE 1=1-->
+                <!--AND dept_sv_id = #{deptSvId}-->
+                <!--) dept_sort_table, (SELECT @pv :=#{deptId}) initialisation-->
+                <!--WHERE FIND_IN_SET(dept_par_id, @pv) >0-->
+                <!--AND @pv := concat(@pv, ',', dept_id)-->
+                <!--)B ON A.idp_user_deptid = B.dept_id-->
+            <!--</otherwise>-->
+        <!--</choose>-->
+        <!--WHERE 1=1-->
+        <!--<if test="searchValue!='' and searchValue != null">-->
+            <!--AND A.${searchColumn} LIKE CONCAT('%',#{searchValue},'%')-->
+        <!--</if>-->
+        <!--<if test="idpUserStatus!='' and idpUserStatus != null">-->
+            <!--AND idp_user_status =#{idpUserStatus}-->
+        <!--</if>-->
+    <!--</select>-->
+
+
+
+
+    <!--<update id="userUpdate" parameterType="HashMap">-->
+        <!--UPDATE securus_idp_user SET-->
+            <!--idp_user_no = #{idpUserNo},-->
+            <!--idp_user_id = #{idpUserId},-->
+            <!--idp_user_pw = #{idpUserPw},-->
+            <!--idp_emp_code = #{idpEmpCode},-->
+            <!--idp_user_name = #{idpUserName},-->
+            <!--idp_user_nick = '',-->
+            <!--idp_user_posid = #{idpUserPosid},-->
+            <!--idp_user_spotid = #{idpUserSpotid},-->
+            <!--idp_user_dutyid = #{idpUserDutyid},-->
+            <!--idp_user_deptid = #{idpUserDeptid},-->
+            <!--idp_user_ou = #{idpUserOu},-->
+            <!--idp_user_sex = #{idpUserSex},-->
+            <!--idp_user_mobile = #{idpUserMobile},-->
+            <!--idp_user_email = #{idpUserEmail},-->
+            <!--idp_user_seq = #{idpUserSeq},-->
+            <!--idp_user_homephone = #{idpUserHomephone},-->
+            <!--idp_user_status = #{idpUserStatus},-->
+            <!--idp_user_modifydate = #{idpUserModifydate},-->
+            <!--idp_user_modifyid = #{idpUserModifyid},-->
+            <!--idp_user_deletedate = #{idpUserDeletedate},-->
+            <!--idp_user_deletetime = #{idpUserDeletetime},-->
+            <!--idp_user_deleteid = #{idpUserDeleteid},-->
+            <!--idp_user_add_deptid01 = #{idpUserAddDeptid01},-->
+            <!--idp_user_ppss_posid01 = #{idpUserPpssPosid01},-->
+            <!--idp_user_ppss_dutyid01 = #{idpUserPpssDutyid01},-->
+            <!--idp_user_add_deptid02 = #{idpUserAddDeptid02},-->
+            <!--idp_user_ppss_posid02 = #{idpUserPpssPosid02},-->
+            <!--idp_user_ppss_dutyid02 = #{idpUserPpssDutyid02},-->
+            <!--idp_user_regist_date = #{idpUserRegistDate},-->
+            <!--idp_user_regist_time = #{idpUserRegistTime},-->
+            <!--idp_end_dttm = #{idpEndDttm},-->
+            <!--idp_user_regstid = #{idpUserRegstid},-->
+            <!--idp_admin_code = #{idpAdminCode},-->
+            <!--idp_user_description = #{idpUserDescription},-->
+            <!--idp_user_temp = #{idpUserTemp},-->
+            <!--idp_pw_modify_date = #{idpPwModifyDate},-->
+            <!--idp_pw_modify_expire = #{idpPwModifyExpire},-->
+            <!--idp_user_mapping = #{idpUserMapping}-->
+        <!--WHERE idp_user_no = #{idpUserNo}-->
+    <!--</update>-->
+
+    <!--<update id="userExcelUpdate" parameterType="com.securus.ciim.user.vo.UserVO">-->
+        <!--UPDATE tbl_member SET-->
+        <!--userName=#{userName}-->
+
+        <!--<if test="mBirth_md!='' and mBirth_md != null">-->
+            <!--, mBirth_md = #{mBirth_md}-->
+        <!--</if>-->
+        <!--<if test="mBirth_yy!='' and mBirth_yy != null">-->
+            <!--, mBirth_yy = #{mBirth_yy}-->
+        <!--</if>-->
+        <!--<if test="blacklist_yn!='' and blacklist_yn != null">-->
+            <!--, blacklist_yn = #{blacklist_yn}-->
+        <!--</if>-->
+        <!--<if test="blacklist_reason!='' and blacklist_reason != null">-->
+            <!--, blacklist_reason = #{blacklist_reason}-->
+        <!--</if>-->
+        <!--<if test="mEmail!='' and mEmail != null">-->
+            <!--, mEmail = #{mEmail}-->
+        <!--</if>-->
+        <!--<if test="mSex!='' and mSex != null">-->
+            <!--, mSex = #{mSex}-->
+        <!--</if>-->
+        <!--<if test="mSnsYn!='' and mSnsYn != null">-->
+            <!--, mSnsYn = #{mSnsYn}-->
+        <!--</if>-->
+        <!--<if test="mNewYn!='' and mNewYn != null">-->
+            <!--, mNewYn = #{mNewYn}-->
+        <!--</if>-->
+
+
+        <!--<if test="mHiddenPost!='' and mHiddenPost != null">-->
+            <!--, mHiddenPost = #{mHiddenPost}-->
+        <!--</if>-->
+        <!--<if test="mPost!='' and mPost != null">-->
+            <!--, mPost = #{mPost}-->
+        <!--</if>-->
+        <!--<if test="mAdr1!='' and mAdr1 != null">-->
+            <!--, mAdr1 = #{mAdr1}-->
+        <!--</if>-->
+        <!--<if test="mAdr2!='' and mAdr2 != null">-->
+            <!--, mAdr2 = #{mAdr2}-->
+        <!--</if>-->
+
+        <!--WHERE userName = #{userName} AND mMobile = #{mMobile}-->
+    <!--</update>-->
+    <!--<update id="userStatusChange" parameterType="HashMap">-->
+        <!--UPDATE securus_idp_user SET-->
+        <!--idp_user_status = #{idpUserStatus},-->
+        <!--idp_user_deletedate = #{idpUserDeletedate},-->
+        <!--idp_user_deletetime = #{idpUserDeletetime},-->
+        <!--idp_user_deleteid = #{idpUserDeleteid}-->
+        <!--WHERE idp_user_no = #{idpUserNo}-->
+    <!--</update>-->
+
+    <!--<delete id="userDeleteCompletely" parameterType="HashMap">-->
+        <!--DELETE FROM securus_idp_user-->
+        <!--WHERE idp_user_no = #{idpUserNo}-->
+    <!--</delete>-->
+
+    <!--<insert id="userHistoryInsert" parameterType="HashMap">-->
+<!--&#45;&#45;       INSERT INTO tbl_member_history (-->
+<!--&#45;&#45;         seq, userid, userpw, userName, mPost, mHiddenPost, mAdr1, mHadr1, mAdr2, mEmail, mMobile, mPhone, mSnsYn, mNewYn, mAttMagazine, mAttention, mBirth_yy, mBirth_md, mSex, mLevel, blacklist_yn, blacklist_reason, is_del, last_login, insert_dt,-->
+<!--&#45;&#45;         edit_dt, blacklist_dt, facebook_id, kakao_id, payco_id, naver_id, megType, utm_source, memRecomId, mDi, change_date, change_time-->
+<!--&#45;&#45;         )-->
+<!--&#45;&#45;       SELECT-->
+<!--&#45;&#45;         seq, userid, userpw, userName, mPost, mHiddenPost, mAdr1, mHadr1, mAdr2, mEmail, mMobile, mPhone, mSnsYn, mNewYn, mAttMagazine, mAttention, mBirth_yy, mBirth_md, mSex, mLevel, blacklist_yn, blacklist_reason, is_del, last_login, insert_dt,-->
+<!--&#45;&#45;         edit_dt, blacklist_dt, facebook_id, kakao_id, payco_id, naver_id, megType, utm_source, memRecomId, mDi, FORMAT(GETDATE(),'yyMMdd'), FORMAT(GETDATE(),'HHmmss')-->
+<!--&#45;&#45;       FROM tbl_member-->
+<!--&#45;&#45;       WHERE tbl_member.seq = #{seq}-->
+
+
+    <!--</insert>-->
+
+    <!--<insert id="userInsert" parameterType="com.securus.ciim.user.vo.UserVO">-->
+        <!--INSERT INTO securus_idp_user(idp_user_id,idp_user_pw,idp_user_name,idp_emp_code, idp_user_sex ,idp_user_deptid,idp_user_mobile,idp_user_spotid,idp_user_posid,idp_user_dutyid,idp_user_description,idp_user_email,idp_user_regist_date,idp_user_regist_time,idp_user_status)-->
+        <!--VALUE (#{idpUserId} , #{idpUserPw} , #{idpUserName} , #{idpEmpCode} ,#{idpUserSex} , #{idpUserDeptid} , #{idpUserMobile} , #{idpUserSpotid} , #{idpUserPosid} , #{idpUserDutyid} , #{idpUserDescription}  , #{idpUserEmail}, #{idpUserRegistDate} , #{idpUserRegistTime} , #{idpUserStatus})-->
+
+    <!--</insert>-->
+
+    <!--<select id="userIdCheck" parameterType="com.securus.ciim.user.vo.UserVO" resultType="Integer">-->
+         <!--SELECT COUNT(*) FROM securus_idp_user-->
+         <!--WHERE idp_user_id =#{idpUserId}-->
+    <!--</select>-->
+
+    <!--<select id="getDuty" resultType="com.securus.ciim.user.vo.UserVO">-->
+      <!--SELECT * FROM securus_duty-->
+    <!--</select>-->
+
+    <!--<select id="getPos" resultType="com.securus.ciim.user.vo.UserVO">-->
+      <!--SELECT * FROM securus_pos-->
+    <!--</select>-->
+</mapper>

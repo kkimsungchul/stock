@@ -30,7 +30,7 @@ public class ParsingVO {
     @JsonProperty("stock_name")
     private String stockName;
 
-    @ApiModelProperty(name = "stock_category_code", value = "종목구분코드", notes = "필수", example = "코스피")
+    @ApiModelProperty(name = "stock_category_code", value = "종목구분코드", notes = "필수", example = "1")
     @JsonProperty("stock_category_code")
     private int stockCategoryCode;
 
@@ -58,7 +58,7 @@ public class ParsingVO {
     @JsonProperty("upper_limit_price")
     private int upperLimitPrice;
 
-    @ApiModelProperty(name = "low_pricewPrice", value = "저가", notes = "필수", example = "005930")
+    @ApiModelProperty(name = "low_price", value = "저가", notes = "필수", example = "005930")
     @JsonProperty("low_price")
     private int lowPrice;
 
@@ -77,6 +77,9 @@ public class ParsingVO {
     @ApiModelProperty(name = "direction", value = "방향", notes = "필수", example = "005930")
     @JsonProperty("direction")
     private String direction;
+    @ApiModelProperty(name = "direction_code", value = "방향코드", notes = "필수", example = "005930")
+    @JsonProperty("direction_code")
+    private int directionCode;
 
     @ApiModelProperty(name = "price_gap", value = "가격차", notes = "필수", example = "005930")
     @JsonProperty("price_gap")
@@ -89,5 +92,9 @@ public class ParsingVO {
     @ApiModelProperty(name = "institution_trade", value = "기관 매매", notes = "필수", example = "005930")
     @JsonProperty("institution_trade")
     private int institutionTrade;
+
+    @ApiModelProperty(name = "parsing_memo", value = "메모", notes = "오류내용등을 메모", example = "005930")
+    @JsonProperty("parsing_memo")
+    private  String parsingMemo;
 
 }

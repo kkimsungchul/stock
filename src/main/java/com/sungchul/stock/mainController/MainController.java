@@ -21,6 +21,8 @@ public class MainController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="a" , value = "걍 테스트용 a변수에 대한 설명", defaultValue = "디폴트값")
     })
+    
+
     public String bye(String a){
         return "bye";
     }
