@@ -1,4 +1,4 @@
-package com.sungchul.stock.parsing;
+package com.sungchul.stock.parsing.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,9 +1,9 @@
 package com.sungchul.stock.test;
 
-import com.sungchul.stock.parsing.ParsingService;
+import com.sungchul.stock.parsing.Service.ParsingService;
 
 
-import lombok.extern.slf4j.Slf4j;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@Slf4j
+
 @WebMvcTest(ParsingService.class)
 public class ParsingServiceTest {
 

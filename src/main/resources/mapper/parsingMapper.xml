@@ -2,18 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.sungchul.stock.parsing.ParsingMapper"><!--namespace를 통해 UserDAO와 연결합니다. -->
+<mapper namespace="com.sungchul.stock.parsing.mapper.ParsingMapper"><!--namespace를 통해 UserDAO와 연결합니다. -->
 
-    <select id="test" resultType="com.sungchul.stock.parsing.StockVO">
+    <select id="test" resultType="com.sungchul.stock.parsing.vo.StockVO">
         SELECT * FROM stock_list
     </select>
 
-    <insert id="insertStockInfo" parameterType="com.sungchul.stock.parsing.StockVO">
+    <insert id="insertStockInfo" parameterType="com.sungchul.stock.parsing.vo.StockVO">
         INSERT INTO stock_list (stock_code , stock_long_code , stock_name , stock_category_code , stock_category_name , insert_date)
         VALUES (#{stockCode} , #{stockLongCode} , #{stockName} , #{stockCategoryCode} , #{stockCategoryName} , #{insertDate})
     </insert>
 
-    <insert id="insertParsingData" parameterType="com.sungchul.stock.parsing.ParsingVO">
+    <insert id="insertParsingData" parameterType="com.sungchul.stock.parsing.vo.ParsingVO">
         INSERT IGNORE INTO parsing_data
             (stock_code ,parsing_date_detail ,parsing_date ,stock_name ,stock_category_code
             ,stock_category_name ,present_price ,yesterday_price ,current_price ,high_price
@@ -27,17 +27,45 @@
 
     </insert>
 
-    <select id="getStockList" resultType="com.sungchul.stock.parsing.StockVO">
-      SELECT
-      seq,
-      stock_code,
-      stock_long_code,
-      stock_name,
-      stock_category_code,
-      stock_category_name,
-      insert_date,
-      update_date
-      FROM stock_list
+    <select id="getStockList" resultType="com.sungchul.stock.parsing.vo.StockVO">
+        SELECT
+        seq,
+        stock_code,
+        stock_long_code,
+        stock_name,
+        stock_category_code,
+        stock_category_name,
+        insert_date,
+        update_date
+        FROM stock_list
+    </select>
+
+    <insert id="saveParsingScheduleLog" parameterType="com.sungchul.stock.parsing.vo.ParsingScheduleVO">
+        INSERT INTO parsing_schedule_log
+        (start_time , end_time , elapsed_time , schedule_date)
+        VALUES
+        (#{startTime} ,#{endTime} , #{elapsedTime} , #{scheduleDate})
+
+    </insert>
+
+    <select id="getDateTest" parameterType="com.sungchul.stock.parsing.vo.StockVO" resultType="com.sungchul.stock.parsing.vo.ParsingVO">
+        SELECT
+            stock_code ,parsing_date_detail ,parsing_date ,stock_name ,stock_category_code
+            ,stock_category_name ,present_price ,yesterday_price ,current_price ,high_price
+            ,upper_limit_price ,low_price ,lower_limit_price ,trading_volume ,trading_value
+            ,direction ,direction_code ,price_gap ,foreign_trade ,institution_trade ,parsing_memo
+        FROM parsing_data
+
+        <trim prefix="WHERE" suffixOverrides="AND">
+            <if test="stockCode!=null"> stock_code = #{stockCode} AND </if>
+            <if test="stockName!=null"> stock_name = #{stockName} AND </if>
+            <if test="stockCategoryCode!=null"> stock_category_code = #{stockCategoryCode} AND </if>
+            <if test="stockCategoryName!=null"> stock_category_name = #{stockCategoryName} AND </if>
+        </trim>
+
+
+
+
     </select>
 
     <!--<select id="getUserList" resultType="com.securus.ciim.user.vo.UserVO" parameterType="com.securus.ciim.user.vo.PageVO">-->

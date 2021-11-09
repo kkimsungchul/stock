@@ -30,7 +30,7 @@ public class MyBatisConfig {
         sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:mapper/*Mapper.xml"));
 
         //mybatis 설정파일 경로
-        sqlSessionFactory.setConfigLocation(applicationContext.getResource("classpath:mybatis-config.xml"));
+        //sqlSessionFactory.setConfigLocation(applicationContext.getResource("classpath:mybatis-config.xml"));
 
         sqlSessionFactory.getObject().getConfiguration().setMapUnderscoreToCamelCase(true);
         return sqlSessionFactory.getObject();

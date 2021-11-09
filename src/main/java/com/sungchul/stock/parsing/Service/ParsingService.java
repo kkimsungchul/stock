@@ -1,7 +1,11 @@
-package com.sungchul.stock.parsing;
+package com.sungchul.stock.parsing.Service;
 
 
 import com.sungchul.stock.csv.CSVService;
+import com.sungchul.stock.parsing.mapper.ParsingMapper;
+import com.sungchul.stock.parsing.vo.ParsingScheduleVO;
+import com.sungchul.stock.parsing.vo.ParsingVO;
+import com.sungchul.stock.parsing.vo.StockVO;
 import com.sungchul.stock.util.DateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +14,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
+import org.thymeleaf.util.DateUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -48,7 +54,7 @@ public class ParsingService {
 
     /**
      * 입력받은 주식코드로 정보를 파싱
-     * @param String
+     * @param  stockCode
      * @return ParsingVO
      * */
     public ParsingVO parsingOneStock(String stockCode)throws Exception{
@@ -185,18 +191,30 @@ public class ParsingService {
      * @return int
      * */
     public int saveParsingData() throws Exception{
+        ParsingScheduleVO parsingScheduleVO = new ParsingScheduleVO();
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        parsingScheduleVO.setStartTime(dateService.getTime("yyyyMMddHHmmss"));
+
         List<StockVO> stockList = csvService.getStockList();
         int insertCouint=0;
         for(StockVO stockVO: stockList){
             insertCouint =+ parsingOneStock(stockVO);
         }
+
+        parsingScheduleVO.setEndTime(dateService.getTime("yyyyMMddHHmmss"));
+        stopWatch.stop();
+        parsingScheduleVO.setElapsedTime(stopWatch.getTotalTimeMillis());
+        parsingScheduleVO.setScheduleDate(dateService.getTime("yyyyMMdd"));
+        saveParsingScheduleLog(parsingScheduleVO);
+
         return insertCouint;
     }
 
 
     /**
      * 전달받은 주식종목 정보를 토대로 데이터를 파싱하여 DB에 저장
-     * @param StockVO
+     * @param stockVO
      * @return ParsingVO
      * */
     public int parsingOneStock(StockVO stockVO)throws Exception{
@@ -312,7 +330,7 @@ public class ParsingService {
 
     /**
      * 전달받은 문자열에서 숫자를 제외한 문자를 제거한 후 숫자로 변환하여 리턴
-     * @param String
+     * @param str
      * @return int
      * */
     public int conversionBlank(String str){
@@ -323,6 +341,8 @@ public class ParsingService {
             return Integer.parseInt(restr);
         }
     }
+
+
 
 
 
@@ -442,7 +462,33 @@ public class ParsingService {
 
     }
 
-    public void mapperTest(){
-        System.out.println(parsingMapper.test());
+    public void saveParsingScheduleLog(ParsingScheduleVO parsingScheduleVO){
+
+
+        parsingMapper.saveParsingScheduleLog(parsingScheduleVO);
     }
+
+    public void mapperTest(){
+
+
+//        ParsingScheduleVO parsingScheduleVO = new ParsingScheduleVO();
+//        StopWatch stopWatch = new StopWatch();
+//        stopWatch.start();
+//        parsingScheduleVO.setStartTime(dateService.getTime("yyyyMMddHHmmss"));
+//        System.out.println(parsingMapper.test());
+//        parsingScheduleVO.setEndTime(dateService.getTime("yyyyMMddHHmmss"));
+//        stopWatch.stop();
+//        parsingScheduleVO.setElapsedTime(stopWatch.getTotalTimeMillis());
+//        parsingScheduleVO.setScheduleDate(dateService.getTime("yyyyMMdd"));
+//        saveParsingScheduleLog(parsingScheduleVO);
+
+
+    }
+
+    public void mapperTest2(StockVO stockVO){
+        parsingMapper.getDateTest(stockVO);
+
+    }
+
+
 }

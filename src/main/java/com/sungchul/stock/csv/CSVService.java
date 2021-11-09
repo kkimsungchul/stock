@@ -10,9 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.sungchul.stock.parsing.ParsingMapper;
-import com.sungchul.stock.parsing.ParsingVO;
-import com.sungchul.stock.parsing.StockVO;
+import com.sungchul.stock.parsing.mapper.ParsingMapper;
+import com.sungchul.stock.parsing.vo.StockVO;
 import com.sungchul.stock.util.DateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
