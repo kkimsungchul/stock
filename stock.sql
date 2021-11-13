@@ -42,7 +42,18 @@ CREATE TABLE IF NOT EXISTS `parsing_data` (
   `parsing_memo` varchar(250) DEFAULT NULL COMMENT '메모',
   PRIMARY KEY (`seq`),
   UNIQUE KEY `stock_code` (`stock_code`,`parsing_date`)
-) ENGINE=InnoDB AUTO_INCREMENT=4587 DEFAULT CHARSET=utf8 COMMENT='주식 파싱 데이터';
+) ENGINE=InnoDB AUTO_INCREMENT=12441 DEFAULT CHARSET=utf8 COMMENT='주식 파싱 데이터';
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 stock.parsing_schedule_log 구조 내보내기
+CREATE TABLE IF NOT EXISTS `parsing_schedule_log` (
+  `seq` int(11) NOT NULL AUTO_INCREMENT COMMENT '순번',
+  `start_time` varchar(14) NOT NULL DEFAULT '0' COMMENT '시작시간(yyyyMMddHHmmss)',
+  `end_time` varchar(14) NOT NULL DEFAULT '0' COMMENT '종료시간(yyyyMMddHHmmss)',
+  `elapsed_time` varchar(50) NOT NULL DEFAULT '0' COMMENT '작업시간 (단위: 밀리초 1초 = 1000)',
+  `schedule_date` varchar(8) NOT NULL DEFAULT '0' COMMENT '작업일(yyyyMMdd)',
+  PRIMARY KEY (`seq`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='파싱 작업 로그';
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 -- 테이블 stock.stock_list 구조 내보내기
@@ -57,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `stock_list` (
   `update_date` varchar(14) NOT NULL DEFAULT '0' COMMENT '수정날짜',
   PRIMARY KEY (`seq`),
   UNIQUE KEY `stock_code` (`stock_code`,`stock_category_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=2597 DEFAULT CHARSET=utf8 COMMENT='주식 종목';
+) ENGINE=InnoDB AUTO_INCREMENT=2596 DEFAULT CHARSET=utf8 COMMENT='주식 종목';
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

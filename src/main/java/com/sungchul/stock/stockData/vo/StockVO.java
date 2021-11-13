@@ -1,4 +1,4 @@
-package com.sungchul.stock.parsing.vo;
+package com.sungchul.stock.stockData.vo;
 
 
 

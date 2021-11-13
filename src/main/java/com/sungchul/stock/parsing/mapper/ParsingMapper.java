@@ -2,7 +2,7 @@ package com.sungchul.stock.parsing.mapper;
 
 import com.sungchul.stock.parsing.vo.ParsingScheduleVO;
 import com.sungchul.stock.parsing.vo.ParsingVO;
-import com.sungchul.stock.parsing.vo.StockVO;
+import com.sungchul.stock.stockData.vo.StockVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +20,7 @@ public interface ParsingMapper {
 
     int insertParsingData(ParsingVO parsingVO);
 
-    List<StockVO> getStockList();
+
 
     int saveParsingScheduleLog(ParsingScheduleVO parsingScheduleVO);
 }

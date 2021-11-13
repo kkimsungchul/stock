@@ -4,11 +4,11 @@
 
 <mapper namespace="com.sungchul.stock.parsing.mapper.ParsingMapper"><!--namespace를 통해 UserDAO와 연결합니다. -->
 
-    <select id="test" resultType="com.sungchul.stock.parsing.vo.StockVO">
+    <select id="test" resultType="com.sungchul.stock.stockData.vo.StockVO">
         SELECT * FROM stock_list
     </select>
 
-    <insert id="insertStockInfo" parameterType="com.sungchul.stock.parsing.vo.StockVO">
+    <insert id="insertStockInfo" parameterType="com.sungchul.stock.stockData.vo.StockVO">
         INSERT INTO stock_list (stock_code , stock_long_code , stock_name , stock_category_code , stock_category_name , insert_date)
         VALUES (#{stockCode} , #{stockLongCode} , #{stockName} , #{stockCategoryCode} , #{stockCategoryName} , #{insertDate})
     </insert>
@@ -27,18 +27,7 @@
 
     </insert>
 
-    <select id="getStockList" resultType="com.sungchul.stock.parsing.vo.StockVO">
-        SELECT
-        seq,
-        stock_code,
-        stock_long_code,
-        stock_name,
-        stock_category_code,
-        stock_category_name,
-        insert_date,
-        update_date
-        FROM stock_list
-    </select>
+
 
     <insert id="saveParsingScheduleLog" parameterType="com.sungchul.stock.parsing.vo.ParsingScheduleVO">
         INSERT INTO parsing_schedule_log
@@ -48,7 +37,7 @@
 
     </insert>
 
-    <select id="getDateTest" parameterType="com.sungchul.stock.parsing.vo.StockVO" resultType="com.sungchul.stock.parsing.vo.ParsingVO">
+    <select id="getDateTest" parameterType="com.sungchul.stock.stockData.vo.StockVO" resultType="com.sungchul.stock.parsing.vo.ParsingVO">
         SELECT
             stock_code ,parsing_date_detail ,parsing_date ,stock_name ,stock_category_code
             ,stock_category_name ,present_price ,yesterday_price ,current_price ,high_price

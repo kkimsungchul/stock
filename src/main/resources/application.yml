@@ -1,9 +1,11 @@
-#server :
-#  port : 80
-#  session:
-#    timeout : 600
-#
 spring :
+  profiles :
+    active : test
+---
+
+
+spring :
+  profiles: local
   session :
     timeout: 600
   datasource:
@@ -20,18 +22,62 @@ spring :
     #로그 표시하며 작동 - 개발 MSSQL
     #driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     #url: jdbc:log4jdbc:sqlserver://127.0.0.1:1433;databaseName=DB명
-#
-#
-#
-#    #개발
+
     username: sungchul
     password: sungchul1234
-#
-#    #테스트
-#
-#    #운영
-#
-#
+
+
+server :
+  port : 80
+  session:
+    timeout : 600
+#mapUnderscoreToCamelCase : 스네이크 카멜 변환
+#callSettersOnNulls : 쿼리 결과 필드가 null인 경우, 누락이 되서 나오는데 누락이 안되게 하는 설정
+#jdbcTypeForNull : 쿼리에 보내는 파라메터가 null인 경우, 오류 발생하는 것 방지  예) #{search.user}
+mybatis:
+#  #config-location : classpath:mybatis-config.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+    jdbc-type-for-null: null
+---
+
+spring :
+  profiles: test
+  session :
+    timeout: 600
+  datasource:
+    #로그 없이 작동 - 개발 MYSQL
+    #driver-class-name: com.mysql.cj.jdbc.Driver
+    #url: jdbc:mysql://localhost:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8
+    #로그 표시하며 작동 - 개발
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://localhost:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8
+
+    #로그 없이 작동 - 개발 MSSQL
+    #driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    #url: jdbc:sqlserver://127.0.0.1:1433;databaseName=DB명
+    #로그 표시하며 작동 - 개발 MSSQL
+    #driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    #url: jdbc:log4jdbc:sqlserver://127.0.0.1:1433;databaseName=DB명
+
+    username: sungchul
+    password: sungchul1234
+
+
+server :
+  port : 8080
+  session:
+    timeout : 600
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+    jdbc-type-for-null: null
+
+
+
+
 #  devtools:
 #    livereload:
 #      enabled: true
@@ -64,16 +110,4 @@ spring :
 #        descriptor:
 #        sql:
 #          BasicBinder: TRACE
-#
-
-
-#mapUnderscoreToCamelCase : 스네이크 카멜 변환
-#callSettersOnNulls : 쿼리 결과 필드가 null인 경우, 누락이 되서 나오는데 누락이 안되게 하는 설정
-#jdbcTypeForNull : 쿼리에 보내는 파라메터가 null인 경우, 오류 발생하는 것 방지  예) #{search.user}
-mybatis:
-#  #config-location : classpath:mybatis-config.xml
-  configuration:
-    map-underscore-to-camel-case: true
-    call-setters-on-nulls: true
-    jdbc-type-for-null: null
 #

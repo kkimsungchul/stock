@@ -1,4 +1,4 @@
-package com.sungchul.stock.csv;
+package com.sungchul.stock.csv.service;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,8 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.sungchul.stock.parsing.mapper.ParsingMapper;
-import com.sungchul.stock.parsing.vo.StockVO;
-import com.sungchul.stock.util.DateService;
+import com.sungchul.stock.stockData.vo.StockVO;
+import com.sungchul.stock.stockData.mapper.StockDataMapper;
+import com.sungchul.stock.common.util.DateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class CSVService {
 
     ParsingMapper parsingMapper;
+    StockDataMapper stockDataMapper;
     DateService dateService;
 
 
@@ -135,10 +137,7 @@ public class CSVService {
         return list;
     }
 
-    public List<StockVO> getStockList(){
 
-        return parsingMapper.getStockList();
-    }
 
 
 

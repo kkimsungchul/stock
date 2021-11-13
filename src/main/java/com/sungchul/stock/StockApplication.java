@@ -13,9 +13,11 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
 import javax.sql.DataSource;
 
-
+@EnableScheduling   //스케쥴러
 @SpringBootApplication
 public class StockApplication extends SpringBootServletInitializer {
 

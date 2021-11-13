@@ -1,12 +1,13 @@
 package com.sungchul.stock.parsing.Service;
 
 
-import com.sungchul.stock.csv.CSVService;
+import com.sungchul.stock.csv.service.CSVService;
 import com.sungchul.stock.parsing.mapper.ParsingMapper;
 import com.sungchul.stock.parsing.vo.ParsingScheduleVO;
 import com.sungchul.stock.parsing.vo.ParsingVO;
-import com.sungchul.stock.parsing.vo.StockVO;
-import com.sungchul.stock.util.DateService;
+import com.sungchul.stock.stockData.vo.StockVO;
+import com.sungchul.stock.stockData.mapper.StockDataMapper;
+import com.sungchul.stock.common.util.DateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -15,7 +16,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
-import org.thymeleaf.util.DateUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -31,6 +31,8 @@ public class ParsingService {
     DateService dateService;
 
     ParsingMapper parsingMapper;
+
+    StockDataMapper stockDataMapper;
 
     @PostConstruct  //프로젝트 실행시 해당 메소드를 바로 실행
     public String aa(){
@@ -193,10 +195,16 @@ public class ParsingService {
     public int saveParsingData() throws Exception{
         ParsingScheduleVO parsingScheduleVO = new ParsingScheduleVO();
         StopWatch stopWatch = new StopWatch();
+
+        //주말에는 작동하지 않게 할거임
+        //현재는 매일수동으로 하고있어서 미필요함..
+//        if(dateService.getWeekDay()== 1 || dateService.getWeekDay()== 7){
+//            return 0;
+//        }
         stopWatch.start();
         parsingScheduleVO.setStartTime(dateService.getTime("yyyyMMddHHmmss"));
 
-        List<StockVO> stockList = csvService.getStockList();
+        List<StockVO> stockList = stockDataMapper.getStockCode();
         int insertCouint=0;
         for(StockVO stockVO: stockList){
             insertCouint =+ parsingOneStock(stockVO);

@@ -2,6 +2,8 @@ package com.sungchul.stock.parsing.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -11,6 +13,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor //매게변수 없는 생성자
 @AllArgsConstructor //매게변수 있는 생성자
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @ApiModel("parsing VO")
 public class ParsingVO {
 

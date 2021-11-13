@@ -1,4 +1,4 @@
-package com.sungchul.stock.util;
+package com.sungchul.stock.common.util;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +41,21 @@ public class DateService {
         value = formatter.format(new java.util.Date());
         return value;
     }
+
+    /*현재 요일을 반환*/
+    public int getWeekDay(){
+        Calendar cal = Calendar.getInstance();
+        //1 일, 2월,3화,4수,5목,6,금,7토
+        int weebDay = cal.get(Calendar.DAY_OF_WEEK)-1;
+        return weebDay;
+
+    }
+
+
+
+
+
+
 
     /*
      * 현재날짜에 변수로 받은 일 또는 년도를 더해서 리턴

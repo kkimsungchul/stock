@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sungchul.stock.stockData.mapper.StockDataMapper"><!--namespace를 통해 UserDAO와 연결합니다. -->
+
+
+    <select id="getStockData"  resultType="com.sungchul.stock.parsing.vo.ParsingVO" parameterType="java.lang.String">
+        SELECT
+        stock_code ,parsing_date_detail ,parsing_date ,stock_name ,stock_category_code
+        ,stock_category_name ,present_price ,yesterday_price ,current_price ,high_price
+        ,upper_limit_price ,low_price ,lower_limit_price ,trading_volume ,trading_value
+        ,direction ,direction_code ,price_gap ,foreign_trade ,institution_trade ,parsing_memo
+        FROM parsing_data
+        WHERE stock_code =#{stockCode}
+    </select>
+
+    <select id="getSearchStockData" parameterType="com.sungchul.stock.stockData.vo.StockVO" resultType="com.sungchul.stock.parsing.vo.ParsingVO">
+        SELECT
+        stock_code ,parsing_date_detail ,parsing_date ,stock_name ,stock_category_code
+        ,stock_category_name ,present_price ,yesterday_price ,current_price ,high_price
+        ,upper_limit_price ,low_price ,lower_limit_price ,trading_volume ,trading_value
+        ,direction ,direction_code ,price_gap ,foreign_trade ,institution_trade ,parsing_memo
+        FROM parsing_data
+        <trim prefix="WHERE" suffixOverrides="AND">
+            <if test="stockCode!=null"> stock_code = #{stockCode} AND </if>
+            <if test="stockName!=null"> stock_name = #{stockName} AND </if>
+            <if test="stockCategoryCode!=null"> stock_category_code = #{stockCategoryCode} AND </if>
+            <if test="stockCategoryName!=null"> stock_category_name = #{stockCategoryName} AND </if>
+        </trim>
+    </select>
+
+    <select id="getStockCode" resultType="com.sungchul.stock.stockData.vo.StockVO">
+        SELECT
+        seq,
+        stock_code,
+        stock_long_code,
+        stock_name,
+        stock_category_code,
+        stock_category_name,
+        insert_date,
+        update_date
+        FROM stock_list
+    </select>
+
+    <select id="getSearchStockName" resultType="HashMap">
+        SELECT
+        stock_name,
+        stock_code,
+        stock_category_name
+        FROM stock_list
+        WHERE stock_name LIKE CONCAT('%',#{stockName},'%')
+    </select>
+
+
+
+</mapper>

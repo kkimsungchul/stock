@@ -2,10 +2,10 @@ package com.sungchul.stock.parsing.controller;
 
 
 import com.sungchul.stock.common.ResponseAPI;
-import com.sungchul.stock.csv.CSVService;
+import com.sungchul.stock.csv.service.CSVService;
 import com.sungchul.stock.parsing.Service.ParsingService;
 import com.sungchul.stock.parsing.vo.ParsingVO;
-import com.sungchul.stock.parsing.vo.StockVO;
+import com.sungchul.stock.stockData.vo.StockVO;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +25,13 @@ import java.util.Map;
 @Slf4j
 @AllArgsConstructor
 @RestController
+@RequestMapping("/parsing")
 public class ParsingController {
 
     ParsingService parsingService;
     CSVService csvService;
 
-    @GetMapping("/parsing")
+    @GetMapping("")
     @ApiOperation(value="전체 정보 파싱" , notes="해당 API 호출 시 주식 정보를 리턴해줌")
     public ResponseEntity<ResponseAPI> parsingAllStock() throws Exception{
         HashMap<String,Object> hashMap = new HashMap<>();
@@ -51,7 +52,7 @@ public class ParsingController {
 //        return new ResponseEntity<>(parsingVO, HttpStatus.OK);
 //    }
 
-    @GetMapping("/parsing/{stockCode}")
+    @GetMapping("/{stockCode}")
     @ApiOperation(
             httpMethod = "GET",
             response = ResponseAPI.class,
@@ -106,59 +107,9 @@ public class ParsingController {
 
 
 
-    @GetMapping("/test")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = Map.class),
-            @ApiResponse(code = 403, message = "접근거부", response = HttpClientErrorException.Forbidden.class),
-            @ApiResponse(code = 500, message = "서버 에러", response = ServerError.class),
-    })
-    public ResponseEntity<LinkedHashMap<String,String>> test(@PathVariable("stockCode") String stockCode)throws Exception{
-        LinkedHashMap<String,String> hashMap = parsingService.test(stockCode);
-        return new ResponseEntity<>(hashMap,HttpStatus.OK);
-    }
-
-    @PostMapping("/test2")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = Map.class),
-            @ApiResponse(code = 403, message = "접근거부", response = HttpClientErrorException.Forbidden.class),
-            @ApiResponse(code = 500, message = "서버 에러", response = ServerError.class),
-    })
-    public ResponseEntity<ResponseAPI> test2(@RequestBody ParsingVO parsingVO )throws Exception{
-        LinkedHashMap<String,String> hashMap = parsingService.test(parsingVO.getStockCode());
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("parsingData",parsingVO);
-        ResponseAPI responseAPI = new ResponseAPI();
-        responseAPI.setData(map);
-        return new ResponseEntity<>(responseAPI,HttpStatus.OK);
-    }
-
     @GetMapping("/csvReadStockList")
     public void csvReadStockList(){
         csvService.readStockList();
-    }
-
-    @GetMapping("/test4")
-    public void test5(){
-
-        parsingService.mapperTest();
-    }
-
-
-    @GetMapping("/test6")
-    public void test6(){
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        parsingService.mapperTest();
-        stopWatch.stop();
-        System.out.println(stopWatch.getTotalTimeMillis());
-
-    }
-    @PostMapping("/mapperTest2")
-    public void mapperTest2(@RequestBody StockVO stockVO){
-        log.info("### stockVO : {}" , stockVO);
-        parsingService.mapperTest2(stockVO);
-
-
     }
 
 
