@@ -44,7 +44,7 @@
             stock_code ,parsing_date_detail ,parsing_date ,stock_name ,stock_category_code
             ,stock_category_name ,present_price ,yesterday_price ,current_price ,high_price
             ,upper_limit_price ,low_price ,lower_limit_price ,trading_volume ,trading_value
-            ,direction ,direction_code ,price_gap ,foreign_trade ,institution_trade ,parsing_memo
+            ,direction ,direction_code ,price_gap ,foreign_trade ,institution_trade ,per,eps ,parsing_memo
         FROM parsing_data
 
         <trim prefix="WHERE" suffixOverrides="AND">
