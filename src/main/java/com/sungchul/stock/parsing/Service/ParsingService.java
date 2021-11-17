@@ -88,27 +88,30 @@ public class ParsingService {
                 String []directionAndGap =element.select("td em").get(1).text().split("\\s");
 
                 parsingVO.setDirection(directionAndGap[0]);
+
+                if(directionAndGap.length>1){
+                    parsingVO.setPriceGap(conversionINT(directionAndGap[1]));
+                }else{
+                    parsingVO.setPriceGap(0);
+                }
                 //directionCode
                 if(directionAndGap[0].equals("상향")){
                     parsingVO.setDirectionCode(1);
                 }else if(directionAndGap[0].equals("하향")){
                     parsingVO.setDirectionCode(2);
+                    parsingVO.setPriceGap( parsingVO.getPriceGap()*-1);
                 }else if(directionAndGap[0].equals("보합")){
                     parsingVO.setDirectionCode(3);
                 }else{
                     parsingVO.setDirectionCode(0);
                 }
 
-                if(directionAndGap.length>1){
-                    parsingVO.setPriceGap(conversionBlank(directionAndGap[1]));
-                }else{
-                    parsingVO.setPriceGap(0);
-                }
+
                 hashMap.put("외국인 매매",element.select("td em").get(2).text());
-                parsingVO.setForeignTrade(conversionBlank(element.select("td em").get(2).text()));
+                parsingVO.setForeignTrade(conversionINT(element.select("td em").get(2).text()));
 
                 hashMap.put("기관 매매",element.select("td em").get(3).text());
-                parsingVO.setInstitutionTrade(conversionBlank(element.select("td em").get(3).text()));
+                parsingVO.setInstitutionTrade(conversionINT(element.select("td em").get(3).text()));
 
 
             }else{
@@ -173,6 +176,18 @@ public class ParsingService {
             hashMap.put("거래대금",elements.get(11).text());
             String []tradingValue = elements.get(11).text().split("\\s");
             parsingVO.setTradingValue(tradingValue[1]);
+
+
+
+
+
+            //per가져옴
+            if(doc.select(".per_table tbody tr td").size()>=1) {
+                Element elementPer = doc.select(".per_table tbody tr td").get(0);
+                parsingVO.setPer(conversionDouble(elementPer.select("em").get(0).text()));
+                parsingVO.setEps(conversionDouble(elementPer.select("em").get(1).text()));
+            }
+
 
 
         }catch (Exception e){
@@ -253,22 +268,26 @@ public class ParsingService {
                 String []directionAndGap =element.select("td em").get(1).text().split("\\s");
                 parsingVO.setDirection(directionAndGap[0]);
                 //directionCode
+                if(directionAndGap.length>1){
+                    parsingVO.setPriceGap(conversionINT(directionAndGap[1]));
+                }else{
+                    parsingVO.setPriceGap(0);
+                }
+
                 if(directionAndGap[0].equals("상향")){
                     parsingVO.setDirectionCode(1);
                 }else if(directionAndGap[0].equals("하향")){
                     parsingVO.setDirectionCode(2);
+                    //하향일 경우 음수로 전환
+                    parsingVO.setPriceGap(parsingVO.getPriceGap()*-1);
                 }else if(directionAndGap[0].equals("보합")){
                     parsingVO.setDirectionCode(3);
                 }else{
                     parsingVO.setDirectionCode(0);
                 }
-                if(directionAndGap.length>1){
-                    parsingVO.setPriceGap(conversionBlank(directionAndGap[1]));
-                }else{
-                    parsingVO.setPriceGap(0);
-                }
-                parsingVO.setForeignTrade(conversionBlank(element.select("td em").get(2).text()));
-                parsingVO.setInstitutionTrade(conversionBlank(element.select("td em").get(3).text()));
+
+                parsingVO.setForeignTrade(conversionINT(element.select("td em").get(2).text()));
+                parsingVO.setInstitutionTrade(conversionINT(element.select("td em").get(3).text()));
 
 
             }else{
@@ -328,6 +347,13 @@ public class ParsingService {
             parsingVO.setTradingValue(tradingValue[1]);
 
 
+            //per eps가져옴
+            if(doc.select(".per_table tbody tr td").size()>=1) {
+                Element elementPer = doc.select(".per_table tbody tr td").get(0);
+                parsingVO.setPer(conversionDouble(elementPer.select("em").get(0).text()));
+                parsingVO.setEps(conversionDouble(elementPer.select("em").get(1).text()));
+            }
+
         }catch (Exception e){
             log.info("#### Exception : {}" , e);
             System.out.println(parsingVO);
@@ -337,16 +363,50 @@ public class ParsingService {
 
 
     /**
-     * 전달받은 문자열에서 숫자를 제외한 문자를 제거한 후 숫자로 변환하여 리턴
+     * 전달받은 문자열에서 숫자를 제외한 문자를 제거한 후 int로 변환하여 리턴
      * @param str
      * @return int
      * */
-    public int conversionBlank(String str){
+    public int conversionINT(String str){
+        int minusCheck=1;
         if(str.equals("") || str.isEmpty()){
             return 0;
         }else{
+            //음수 체크
+            if(str.contains("-")){
+                minusCheck = -1;
+            }
             String restr = str.replaceAll("[^0-9]","");
-            return Integer.parseInt(restr);
+            //문자열을 숫자로 변환 후 비어있을 경우 0으로 치환
+            if(restr.equals("") || restr.isEmpty()){
+                return 0;
+            }
+            return Integer.parseInt(restr)*minusCheck;
+        }
+    }
+
+    /**
+     * 전달받은 문자열에서 숫자를 제외한 문자를 제거한 후 double로 변환하여 리턴
+     * @param str
+     * @return double
+     * */
+    public double conversionDouble(String str){
+        double minusCheck=1;
+
+        //넘어온 문자열 공백 빈값 확인
+        if(str.equals("") || str.isEmpty()){
+            return 0;
+        }else{
+            //음수 체크
+            if(str.contains("-")){
+                minusCheck = -1;
+            }
+            String restr = str.replaceAll("[^0-9\\.]","");
+            //문자열을 숫자로 변환 후 비어있을 경우 0으로 치환
+            if(restr.equals("") || restr.isEmpty()){
+                return 0;
+            }
+            return Double.parseDouble(restr)*minusCheck;
         }
     }
 

@@ -96,6 +96,14 @@ public class ParsingVO {
     @JsonProperty("institution_trade")
     private int institutionTrade;
 
+    @ApiModelProperty(name = "per", value = "per", notes = "per", example = "5.57")
+    @JsonProperty("per")
+    private double per;
+
+    @ApiModelProperty(name = "eps", value = "eps", notes = "eps", example = "2.2")
+    @JsonProperty("eps")
+    private double eps;
+
     @ApiModelProperty(name = "parsing_memo", value = "메모", notes = "오류내용등을 메모", example = "005930")
     @JsonProperty("parsing_memo")
     private  String parsingMemo;

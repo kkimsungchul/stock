@@ -13,10 +13,10 @@ public class ParsingSchedule {
     @Autowired
     ParsingService parsingService;
 
-    @Scheduled(cron = "*/10 * * * * MON-FRI", zone = "Asia/Seoul")
-    public void test(){
-        log.info("테스트111");
-    }
+//    @Scheduled(cron = "*/10 * * * * MON-FRI", zone = "Asia/Seoul")
+//    public void test(){
+//        log.info("테스트111");
+//    }
 
     /**
      * 주식 파싱 스케줄러
