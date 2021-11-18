@@ -553,8 +553,8 @@ public class ParsingService {
 
     }
 
-    public void mapperTest2(StockVO stockVO){
-        parsingMapper.getDateTest(stockVO);
+    public List<ParsingVO> mapperTest2(StockVO stockVO){
+        return parsingMapper.getDateTest(stockVO);
 
     }
 

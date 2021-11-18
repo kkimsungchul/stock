@@ -46,6 +46,11 @@ public class StockDataService {
     public List<HashMap<String,String>> getSearchStockName(String stockName){
         return stockDataMapper.getSearchStockName(stockName);
     }
+    public List<ParsingVO> getSearchStock(StockVO stockVO){
+        return stockDataMapper.getSearchStock(stockVO);
+    }
+
+
 
 
 

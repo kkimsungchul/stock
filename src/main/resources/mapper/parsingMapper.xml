@@ -50,7 +50,6 @@
         <trim prefix="WHERE" suffixOverrides="AND">
             <if test="stockCode!=null"> stock_code = #{stockCode} AND </if>
             <if test="stockName!=null"> stock_name = #{stockName} AND </if>
-            <if test="stockCategoryCode!=null"> stock_category_code = #{stockCategoryCode} AND </if>
             <if test="stockCategoryName!=null"> stock_category_name = #{stockCategoryName} AND </if>
         </trim>
 

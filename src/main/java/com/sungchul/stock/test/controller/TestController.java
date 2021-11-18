@@ -8,6 +8,8 @@ import com.sungchul.stock.stockData.vo.StockVO;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StopWatch;
@@ -22,14 +24,17 @@ import java.util.Map;
 
 
 @Slf4j
-@AllArgsConstructor
 @RestController
 @RequestMapping("/test")
 public class TestController {
 
-
+    @Autowired
     ParsingService parsingService;
+    @Autowired
     CSVService csvService;
+
+    @Value("${test.testword1}")
+    private String aaa;
 
     @GetMapping("")
     @ApiResponses({
@@ -74,9 +79,10 @@ public class TestController {
 
     }
     @PostMapping("/mapperTest2")
-    public void mapperTest2(@RequestBody StockVO stockVO){
+    public List<ParsingVO> mapperTest2(@RequestBody StockVO stockVO){
         log.info("### stockVO : {}" , stockVO);
-        parsingService.mapperTest2(stockVO);
+        System.out.println("### aaa : "+aaa);
+        return parsingService.mapperTest2(stockVO);
 
 
     }

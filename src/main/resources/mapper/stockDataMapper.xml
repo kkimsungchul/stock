@@ -15,7 +15,7 @@
         WHERE stock_code =#{stockCode}
     </select>
 
-    <select id="getSearchStockData" parameterType="com.sungchul.stock.stockData.vo.StockVO" resultType="com.sungchul.stock.parsing.vo.ParsingVO">
+    <select id="getSearchStock" parameterType="com.sungchul.stock.stockData.vo.StockVO" resultType="com.sungchul.stock.parsing.vo.ParsingVO">
         SELECT
         stock_code ,parsing_date_detail ,parsing_date ,stock_name ,stock_category_code
         ,stock_category_name ,present_price ,yesterday_price ,current_price ,high_price
@@ -25,7 +25,6 @@
         <trim prefix="WHERE" suffixOverrides="AND">
             <if test="stockCode!=null"> stock_code = #{stockCode} AND </if>
             <if test="stockName!=null"> stock_name = #{stockName} AND </if>
-            <if test="stockCategoryCode!=null"> stock_category_code = #{stockCategoryCode} AND </if>
             <if test="stockCategoryName!=null"> stock_category_name = #{stockCategoryName} AND </if>
         </trim>
     </select>

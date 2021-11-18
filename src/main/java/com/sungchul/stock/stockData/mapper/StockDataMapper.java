@@ -19,4 +19,6 @@ public interface StockDataMapper {
     List<StockVO> getStockCode();
 
     List<HashMap<String,String>> getSearchStockName(String stockName);
+
+    List<ParsingVO> getSearchStock(StockVO stockVO);
 }

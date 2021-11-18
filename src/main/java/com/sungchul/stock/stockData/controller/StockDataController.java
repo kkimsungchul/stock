@@ -9,10 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.rmi.ServerError;
@@ -24,6 +21,7 @@ import java.util.Map;
 @Slf4j
 @AllArgsConstructor
 @RestController
+@Api(tags = {"DB에 저장되어 있는 파싱 데이터를 제공해주는 Controller"})
 @RequestMapping("/stockData")
 public class StockDataController {
 
@@ -79,7 +77,7 @@ public class StockDataController {
             httpMethod = "GET",
             response = ResponseAPI.class,
             value="주싱명을 검색하여 주식종목 코드를 가져옴" ,
-            notes="해당 API 호출시 데이터베이스에서저장되어 있는 전체 주식종목코드를 리턴해줌")
+            notes="해당 API 호출시 데이터베이스에서 이름조건에 맞는 주식 파싱 데이터를 리턴해줌")
     @ApiImplicitParams({
             @ApiImplicitParam(name="stockName" , value = "주식 종목 이름", defaultValue = "삼성")
     })
@@ -96,5 +94,36 @@ public class StockDataController {
 
         responseAPI.setData(hashMap);
         return new ResponseEntity<>(responseAPI, HttpStatus.OK);
+    }
+
+    @PostMapping("/stockData")
+    @ApiOperation(
+            httpMethod = "POST",
+            response = ResponseAPI.class,
+            value="주식정보로 검색하여 데이터를 가져옴" ,
+            notes="해당 API 호출시 데이터베이스에서 검색조건에 맞는 주식 파싱 데이터를 리턴해줌")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="stock_category_name" , value = "주식 구분 명", defaultValue = "코스피"),
+            @ApiImplicitParam(name="stock_category_code" , value = "주식 구분 코드, 1: 코스피 , 2: 코스닥 , 3: 코넥스", defaultValue = "1"),
+            @ApiImplicitParam(name="stock_name" , value = "주식 종목 이름", defaultValue = "삼성"),
+            @ApiImplicitParam(name="stock_code" , value = "주식 단축 코드", defaultValue = "005930"),
+            @ApiImplicitParam(name="insert_date" , value = "검색날짜", defaultValue = "20211117")
+
+
+    })
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = Map.class),
+            @ApiResponse(code = 403, message = "접근거부", response = HttpClientErrorException.Forbidden.class),
+            @ApiResponse(code = 500, message = "서버 에러", response = ServerError.class),
+    })
+    public ResponseEntity<ResponseAPI> getSearchStock(@RequestBody StockVO stockVO){
+        log.info("### stockVO : {}" , stockVO);
+        HashMap<String,Object> hashMap = new HashMap<>();
+        ResponseAPI responseAPI = new ResponseAPI();
+        List<ParsingVO> searchStockList = stockDataService.getSearchStock(stockVO);
+        hashMap.put("searchStockList",searchStockList);
+        responseAPI.setData(hashMap);
+        return new ResponseEntity<>(responseAPI, HttpStatus.OK);
+
     }
 }

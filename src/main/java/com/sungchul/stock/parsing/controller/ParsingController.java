@@ -25,6 +25,7 @@ import java.util.Map;
 @Slf4j
 @AllArgsConstructor
 @RestController
+@Api(tags = {"데이터 파싱 서비스를 제공하는 Controller"})
 @RequestMapping("/parsing")
 public class ParsingController {
 
