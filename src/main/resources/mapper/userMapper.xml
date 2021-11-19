@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sungchul.stock.user.mapper.UserMapper"><!--namespace를 통해 UserDAO와 연결합니다. -->
+
+
+    <select id="getUser" resultType="com.sungchul.stock.user.vo.UserVO" parameterType="java.lang.String">
+        SELECT * FROM admin_user
+        WHERE user_id =#{userId}
+
+    </select>
+
+    <insert id="insertUser" parameterType="com.sungchul.stock.user.vo.UserVO">
+        INSERT INTO admin_user (user_id , password , name , reg_date , reg_time , role_id , status)
+        VALUES (#{userId} , #{password} , #{name} , #{regDate} , #{regTime} , #{roleId} , #{status})
+    </insert>
+
+
+
+</mapper>

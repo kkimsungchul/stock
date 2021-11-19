@@ -5,6 +5,7 @@ import com.sungchul.stock.csv.service.CSVService;
 import com.sungchul.stock.parsing.Service.ParsingService;
 import com.sungchul.stock.parsing.vo.ParsingVO;
 import com.sungchul.stock.stockData.vo.StockVO;
+import com.sungchul.stock.test.service.TestService;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
@@ -32,6 +34,9 @@ public class TestController {
     ParsingService parsingService;
     @Autowired
     CSVService csvService;
+
+    @Autowired
+    TestService testService;
 
     @Value("${test.testword1}")
     private String aaa;
@@ -65,7 +70,7 @@ public class TestController {
 
     @GetMapping("/test4")
     public void test5(){
-
+        System.out.println("### test4####");
         parsingService.mapperTest();
     }
 
@@ -86,6 +91,15 @@ public class TestController {
 
 
     }
+    @GetMapping("/getTest")
+    public String getTest(){
+        System.out.println("### aaa : "+aaa);
+        return "hihihi";
+    }
+
+
+
+
 
 
 }

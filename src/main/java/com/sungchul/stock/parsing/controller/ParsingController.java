@@ -78,9 +78,9 @@ public class ParsingController {
     }
 
 
-    @GetMapping("/saveStockList")
+    @PostMapping("/stock")
     @ApiOperation(
-            httpMethod = "GET",
+            httpMethod = "POST",
             value="저장된 CSV 파일의 주싱정보를 DB에 저장" ,
             notes="저장된 CSV 파일의 주싱정보를 DB에 저장")
     @ApiResponses({
@@ -93,8 +93,8 @@ public class ParsingController {
     }
 
 
-    @GetMapping("/saveParsingData")
-    @ApiOperation(value="주식정보를 파싱하여 DB에 저장" , notes="DB에 저장되어 있는 주식종목 정보를 토대로 주싱정보를 파싱하여 DB에 저장")
+    @PostMapping("/")
+    @ApiOperation( httpMethod = "POST",value="주식정보를 파싱하여 DB에 저장" , notes="DB에 저장되어 있는 주식종목 정보를 토대로 주싱정보를 파싱하여 DB에 저장")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = Map.class),
             @ApiResponse(code = 403, message = "접근거부", response = HttpClientErrorException.Forbidden.class),
@@ -108,10 +108,10 @@ public class ParsingController {
 
 
 
-    @GetMapping("/csvReadStockList")
-    public void csvReadStockList(){
-        csvService.readStockList();
-    }
+//    @GetMapping("/csvReadStockList")
+//    public void csvReadStockList(){
+//        csvService.readStockList();
+//    }
 
 
 

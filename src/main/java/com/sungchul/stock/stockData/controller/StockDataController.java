@@ -102,15 +102,15 @@ public class StockDataController {
             response = ResponseAPI.class,
             value="주식정보로 검색하여 데이터를 가져옴" ,
             notes="해당 API 호출시 데이터베이스에서 검색조건에 맞는 주식 파싱 데이터를 리턴해줌")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="stock_category_name" , value = "주식 구분 명", defaultValue = "코스피"),
-            @ApiImplicitParam(name="stock_category_code" , value = "주식 구분 코드, 1: 코스피 , 2: 코스닥 , 3: 코넥스", defaultValue = "1"),
-            @ApiImplicitParam(name="stock_name" , value = "주식 종목 이름", defaultValue = "삼성"),
-            @ApiImplicitParam(name="stock_code" , value = "주식 단축 코드", defaultValue = "005930"),
-            @ApiImplicitParam(name="insert_date" , value = "검색날짜", defaultValue = "20211117")
-
-
-    })
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name="stock_category_name" , value = "주식 구분 명", defaultValue = "코스피"),
+//            @ApiImplicitParam(name="stock_category_code" , value = "주식 구분 코드, 1: 코스피 , 2: 코스닥 , 3: 코넥스", defaultValue = "1"),
+//            @ApiImplicitParam(name="stock_name" , value = "주식 종목 이름", defaultValue = "삼성"),
+//            @ApiImplicitParam(name="stock_code" , value = "주식 단축 코드", defaultValue = "005930"),
+//            @ApiImplicitParam(name="insert_date" , value = "검색날짜", defaultValue = "20211117")
+//
+//
+//    })
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = Map.class),
             @ApiResponse(code = 403, message = "접근거부", response = HttpClientErrorException.Forbidden.class),

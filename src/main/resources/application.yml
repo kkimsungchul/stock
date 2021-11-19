@@ -1,6 +1,6 @@
 spring :
   profiles :
-    active : test
+    active : local
 ---
 
 
@@ -44,7 +44,9 @@ mybatis:
 swagger :
   enable : true
 
-
+test :
+  testword1 : hihihihi
+  testword2 : byebyebyebye
 ---
 
 spring :
