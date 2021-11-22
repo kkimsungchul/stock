@@ -26,6 +26,8 @@ spring :
     username: sungchul
     password: sungchul1234
 
+  jwt:
+    secret : jwtsecretkey
 
 server :
   port : 80

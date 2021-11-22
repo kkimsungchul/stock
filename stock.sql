@@ -16,6 +16,21 @@
 CREATE DATABASE IF NOT EXISTS `stock` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `stock`;
 
+-- 테이블 stock.admin_user 구조 내보내기
+CREATE TABLE IF NOT EXISTS `admin_user` (
+  `user_id` varchar(20) NOT NULL COMMENT '관리자 ID',
+  `password` varchar(200) NOT NULL COMMENT '비밀번호',
+  `name` varchar(20) NOT NULL COMMENT '이름',
+  `reg_date` char(8) NOT NULL COMMENT '등록일',
+  `reg_time` char(6) NOT NULL DEFAULT '' COMMENT '등록시간',
+  `role_id` varchar(15) NOT NULL COMMENT 'admin, manager , user',
+  `status` int(1) NOT NULL DEFAULT '1' COMMENT '관리자 상태 :  1:사용, 2:삭제',
+  `otp` int(1) DEFAULT '0' COMMENT 'OTP 발행 여부 0 : 미발행 , 1 : 발행',
+  `otp_key` varchar(8) DEFAULT NULL COMMENT 'OTP 고유 키 값',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='관리툴 사용자 테이블';
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
 -- 테이블 stock.parsing_data 구조 내보내기
 CREATE TABLE IF NOT EXISTS `parsing_data` (
   `seq` int(11) NOT NULL AUTO_INCREMENT COMMENT '생성순서',
@@ -39,10 +54,12 @@ CREATE TABLE IF NOT EXISTS `parsing_data` (
   `institution_trade` int(20) DEFAULT '0' COMMENT '기관 매매',
   `parsing_date` varchar(8) NOT NULL DEFAULT '0' COMMENT '기준 날짜',
   `parsing_date_detail` varchar(14) NOT NULL DEFAULT '0' COMMENT '상세 기준 날짜',
+  `per` int(10) DEFAULT '0' COMMENT 'per(배)',
+  `eps` int(10) DEFAULT '0' COMMENT 'eps(원)',
   `parsing_memo` varchar(250) DEFAULT NULL COMMENT '메모',
   PRIMARY KEY (`seq`),
   UNIQUE KEY `stock_code` (`stock_code`,`parsing_date`)
-) ENGINE=InnoDB AUTO_INCREMENT=12441 DEFAULT CHARSET=utf8 COMMENT='주식 파싱 데이터';
+) ENGINE=InnoDB AUTO_INCREMENT=30539 DEFAULT CHARSET=utf8 COMMENT='주식 파싱 데이터';
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 -- 테이블 stock.parsing_schedule_log 구조 내보내기
@@ -53,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `parsing_schedule_log` (
   `elapsed_time` varchar(50) NOT NULL DEFAULT '0' COMMENT '작업시간 (단위: 밀리초 1초 = 1000)',
   `schedule_date` varchar(8) NOT NULL DEFAULT '0' COMMENT '작업일(yyyyMMdd)',
   PRIMARY KEY (`seq`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='파싱 작업 로그';
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='파싱 작업 로그';
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 -- 테이블 stock.stock_list 구조 내보내기
