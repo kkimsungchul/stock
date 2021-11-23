@@ -1,4 +1,4 @@
-package com.sungchul.stock.jwt.vo;
+package com.sungchul.stock.config.jwt.util;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -54,6 +54,7 @@ public class JwtTokenUtil implements Serializable {
 
     //generate token for user
     // 유저를 위한 토큰을 발급해준다.
+    //발급시 사용자의 아이디를 사용함
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, userDetails.getUsername());

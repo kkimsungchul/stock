@@ -1,4 +1,4 @@
-package com.sungchul.stock.jwt.config;
+package com.sungchul.stock.config.jwt.config;
 
 import java.io.IOException;
 import java.io.Serializable;

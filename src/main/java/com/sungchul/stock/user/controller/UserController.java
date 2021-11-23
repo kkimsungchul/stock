@@ -19,12 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @AllArgsConstructor
-@RestController("/user")
+@RestController
 public class UserController {
 
     UserService userService;
 
-    @PostMapping("")
+    @PostMapping("/user")
     @ApiOperation(
             httpMethod = "POST",
             response = ResponseAPI.class,

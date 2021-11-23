@@ -1,9 +1,9 @@
-package com.sungchul.stock.jwt.controller;
+package com.sungchul.stock.config.jwt.controller;
 
-import com.sungchul.stock.jwt.vo.JwtRequest;
-import com.sungchul.stock.jwt.config.JwtResponse;
-import com.sungchul.stock.jwt.vo.JwtTokenUtil;
-import com.sungchul.stock.jwt.config.JwtUserDetailsService;
+import com.sungchul.stock.config.jwt.vo.JwtRequest;
+import com.sungchul.stock.config.jwt.config.JwtResponse;
+import com.sungchul.stock.config.jwt.util.JwtTokenUtil;
+import com.sungchul.stock.config.jwt.config.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+
+//JWT 토큰을 발급하는 컨트롤러
+//DB에 저장된 값을 가져와서 저장함
 @RestController
 @CrossOrigin
 public class JwtAuthenticationController {

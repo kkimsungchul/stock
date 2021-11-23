@@ -1,4 +1,4 @@
-package com.sungchul.stock.jwt.config;
+package com.sungchul.stock.config.jwt.config;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ public class JwtResponse implements Serializable {
         this.jwttoken = jwttoken;
     }
 
-    public String getToken() {
+    public String getJwt() {
         return this.jwttoken;
     }
 }

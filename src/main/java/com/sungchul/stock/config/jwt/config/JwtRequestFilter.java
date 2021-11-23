@@ -1,4 +1,4 @@
-package com.sungchul.stock.jwt.config;
+package com.sungchul.stock.config.jwt.config;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sungchul.stock.jwt.vo.JwtTokenUtil;
+import com.sungchul.stock.config.jwt.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,14 +31,31 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        final String requestTokenHeader = request.getHeader("Authorization");
+        //헤더에서 Authorization 키값으로 저장된 값을 꺼내옴
+        final String requestTokenHeader = request.getHeader("jwt");
+
 
         String username = null;
         String jwtToken = null;
+
+        //swagger 의 인증을 사용 할때는 Bearer 값이 같이 넘어가지 않음. 아래와 같이 작성할 경우 오류가 발생하므로, 토큰이 있는지 없는지만 체크
         // JWT Token is in the form "Bearer token". Remove Bearer word and get
         // only the Token
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-            jwtToken = requestTokenHeader.substring(7);
+//        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+//            jwtToken = requestTokenHeader.substring(7);
+//            try {
+//                username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+//            } catch (IllegalArgumentException e) {
+//                System.out.println("Unable to get JWT Token");
+//            } catch (ExpiredJwtException e) {
+//                System.out.println("JWT Token has expired");
+//            }
+//        } else {
+//            logger.warn("JWT Token does not begin with Bearer String");
+//        }
+
+        if (requestTokenHeader != null) {
+            jwtToken = requestTokenHeader;
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
@@ -47,7 +64,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 System.out.println("JWT Token has expired");
             }
         } else {
-            logger.warn("JWT Token does not begin with Bearer String");
+            logger.warn("JWT Token is null");
         }
 
         // Once we get the token validate it.
