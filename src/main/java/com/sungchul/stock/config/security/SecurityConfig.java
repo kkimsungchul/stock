@@ -55,7 +55,6 @@
 //                .anyRequest().authenticated()
 //                .and()
 //                .formLogin();
-//
 //        http.csrf()
 //                .requireCsrfProtectionMatcher(new CsrfRequireMatcher())
 //                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
