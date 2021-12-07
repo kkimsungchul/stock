@@ -1,7 +1,7 @@
 package com.sungchul.stock.config.jwt.controller;
 
 import com.sungchul.stock.config.jwt.vo.JwtRequest;
-import com.sungchul.stock.config.jwt.config.JwtResponse;
+import com.sungchul.stock.config.jwt.vo.JwtResponse;
 import com.sungchul.stock.config.jwt.util.JwtTokenUtil;
 import com.sungchul.stock.config.jwt.config.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;

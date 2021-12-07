@@ -39,7 +39,7 @@ server :
 mybatis:
 #  #config-location : classpath:mybatis-config.xml
   configuration:
-    map-underscore-to-camel-case: true
+
     call-setters-on-nulls: true
     jdbc-type-for-null: null
 
