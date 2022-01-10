@@ -58,7 +58,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 // dont authenticate this particular request
                 .authorizeRequests()
-                .antMatchers("/","/csrf","/authenticate","/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
+                //전부다허용
+                .antMatchers("/**").permitAll()
+
+                //접근제한
+                //.antMatchers("/","/csrf","/authenticate","/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
+
                 .antMatchers("/user","/user/**").hasRole("ADMIN")
                 // all other requests need to be authenticated
                 .anyRequest()
