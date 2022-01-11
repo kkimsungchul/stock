@@ -4,6 +4,9 @@ import com.sungchul.stock.config.jwt.vo.JwtRequest;
 import com.sungchul.stock.config.jwt.vo.JwtResponse;
 import com.sungchul.stock.config.jwt.util.JwtTokenUtil;
 import com.sungchul.stock.config.jwt.config.JwtUserDetailsService;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,6 +48,21 @@ public class JwtAuthenticationController {
 
         return ResponseEntity.ok(new JwtResponse(token));
     }
+    
+    //swagger-ui에서 사용하려고 햇는데 잘안댐
+    @RequestMapping(value = "/authenticateGet", method = RequestMethod.GET )
+    public ResponseEntity<?> createAuthenticationTokenGet(HttpServletRequest request) throws Exception {
+
+        authenticate(request.getParameter("client_id"), request.getParameter("client_secret"));
+
+        final UserDetails userDetails = userDetailsService
+                .loadUserByUsername(request.getParameter("client_id"));
+
+        final String token = jwtTokenUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new JwtResponse(token));
+    }
+    
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

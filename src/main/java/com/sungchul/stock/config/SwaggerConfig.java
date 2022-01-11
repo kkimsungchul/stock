@@ -4,6 +4,9 @@ import io.swagger.annotations.Tag;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import springfox.documentation.builders.AuthorizationCodeGrantBuilder;
+import springfox.documentation.builders.OAuthBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.*;
@@ -33,7 +36,9 @@ public class SwaggerConfig {
             .paths(PathSelectors.any())
             .build()
             .securityContexts(Arrays.asList(securityContext()))
+            //.securitySchemes(Arrays.asList(securitySchemeFromAuthorizationCodeGrant()));
             .securitySchemes(Arrays.asList(apiKey()));
+            
     }
 
 
@@ -68,5 +73,24 @@ public class SwaggerConfig {
         return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
     }
 
+    
+    
+    //여기서부터는 swagger의 oauth 부분임 근데 잘안댐
+    private SecurityScheme securitySchemeFromAuthorizationCodeGrant()
+    {
+        String authURL = "/authenticateGet";
+
+//        GrantType grantType = new ClientCredentialsGrant(dSpaceTokenUrl);
+        GrantType grantType = new AuthorizationCodeGrantBuilder()
+            .tokenEndpoint(new TokenEndpoint(authURL, "swagger-ui"))
+            .tokenRequestEndpoint(new TokenRequestEndpoint(authURL, "admin", "admin"))
+            .build();
+
+        return new OAuthBuilder()
+                .name("spring_oauth")
+                .grantTypes(Arrays.asList(grantType))
+//                .scopes(Arrays.asList(scopesFromAuthorizationCodeGrant()))
+                .build();
+    }
 
 }
