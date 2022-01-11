@@ -58,6 +58,12 @@
 
     </select>
 
+
+	<select id="getParsingScheduleLog" parameterType="com.sungchul.stock.parsing.vo.ParsingScheduleVO" resultType="com.sungchul.stock.parsing.vo.ParsingScheduleVO" >
+		SELECT * FROM parsing_schedule_log
+		WHERE schedule_date = #{scheduleDate}
+	</select>
+
     <!--<select id="getUserList" resultType="com.securus.ciim.user.vo.UserVO" parameterType="com.securus.ciim.user.vo.PageVO">-->
         <!--SELECT-->
         <!--C.pos_name,-->

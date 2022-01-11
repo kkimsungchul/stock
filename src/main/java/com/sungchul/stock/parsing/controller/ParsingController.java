@@ -4,6 +4,7 @@ package com.sungchul.stock.parsing.controller;
 import com.sungchul.stock.common.ResponseAPI;
 import com.sungchul.stock.csv.service.CSVService;
 import com.sungchul.stock.parsing.Service.ParsingService;
+import com.sungchul.stock.parsing.vo.ParsingScheduleVO;
 import com.sungchul.stock.parsing.vo.ParsingVO;
 import com.sungchul.stock.stockData.vo.StockVO;
 import io.swagger.annotations.*;
@@ -105,7 +106,14 @@ public class ParsingController {
     }
 
 
-
+    
+    
+    
+//    @GetMapping("/getParsingScheduleLog")
+//    public List<ParsingScheduleVO> getParsingScheduleLog(){
+//    	
+//    	return parsingService.getParsingScheduleLog();
+//    }
 
 
 //    @GetMapping("/csvReadStockList")

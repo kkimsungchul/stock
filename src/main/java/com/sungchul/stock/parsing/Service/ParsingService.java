@@ -203,7 +203,7 @@ public class ParsingService {
 
 
     /**
-     * DB에 저장된 주식종목 코드목록으로 parsingOneStock 메소드를 호출하여 실행시에 해당하는 주식 정보를 파싱
+     * DB에 저장된 주식종목 코드목록으로 parsingOneStock 메소드를 호출
      * @param void
      * @return int
      * */
@@ -216,6 +216,12 @@ public class ParsingService {
 //        if(dateService.getWeekDay()== 1 || dateService.getWeekDay()== 7){
 //            return 0;
 //        }
+        
+        //작동한 적이 있으면 다시 작동하지 않도록 설정
+        if(getParsingScheduleLog().size()!=0) {
+        	return 0;
+        };
+        
         stopWatch.start();
         parsingScheduleVO.setStartTime(dateService.getTime("yyyyMMddHHmmss"));
 
@@ -231,7 +237,7 @@ public class ParsingService {
         parsingScheduleVO.setScheduleDate(dateService.getTime("yyyyMMdd"));
         saveParsingScheduleLog(parsingScheduleVO);
 
-        return insertCouint;
+        return 1;
     }
 
 
@@ -415,8 +421,11 @@ public class ParsingService {
 
 
 
-    //https://finance.naver.com/item/main.nhn?code=197140
-    //@PostConstruct
+    /**
+     * 테스트
+     * @param stockCode
+     * @return LinkedHashMap<String,String>
+     */
     public LinkedHashMap<String,String> test(String stockCode) throws Exception{
 
         LinkedHashMap<String,String> hashMap = new LinkedHashMap<>();
@@ -530,10 +539,31 @@ public class ParsingService {
 
     }
 
+    /**
+     * 파싱 작업 로그 저장
+     * @param ParsingScheduleVO
+     * @return viod
+     */
     public void saveParsingScheduleLog(ParsingScheduleVO parsingScheduleVO){
 
 
         parsingMapper.saveParsingScheduleLog(parsingScheduleVO);
+    }
+    
+    
+    /**
+     * 금일 파싱 작업을 실행한 로그가 있는지 확인
+     * @param void
+     * @return List<ParsingScheduleVO>
+     */
+    public List<ParsingScheduleVO> getParsingScheduleLog() {
+    	ParsingScheduleVO parsingScheduleVO = new ParsingScheduleVO();
+    	parsingScheduleVO.setScheduleDate(dateService.getTime("yyyyMMdd"));
+    	//parsingScheduleVO.setScheduleDate("20220110");
+    	
+   	
+    	
+    	return parsingMapper.getParsingScheduleLog(parsingScheduleVO);
     }
 
     public void mapperTest(){

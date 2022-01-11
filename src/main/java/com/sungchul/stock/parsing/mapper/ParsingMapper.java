@@ -20,7 +20,9 @@ public interface ParsingMapper {
 
     int insertParsingData(ParsingVO parsingVO);
 
-
+    
 
     int saveParsingScheduleLog(ParsingScheduleVO parsingScheduleVO);
+    
+    List<ParsingScheduleVO>getParsingScheduleLog(ParsingScheduleVO parsingScheduleVO);
 }
