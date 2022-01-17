@@ -1,0 +1,52 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git credentialsId: 'kimsc1218', url: 'https://github.com/kkimsungchul/stock.git', branch: 'master'
+      }
+    }	
+    stage('build') {
+      steps {
+        bat './gradlew.bat clean build'
+      }
+    }
+    stage('service_stop') {
+      steps {
+        bat """
+        net stop Tomcat8
+        """
+
+      }
+    }
+    stage('backup') {
+      steps {
+        bat """
+        cd C:/apache-tomcat-8.0.30/webapps
+        del ROOT
+        rename ROOT.war ROOTwar.backup.%date%
+        """
+
+      }
+    }
+    stage('depoly') {
+      steps {
+        bat """
+        cd C:/ProgramData/Jenkins/.jenkins/workspace/JenkinsTest/gitTest/build/libs
+        move ROOT.war C:/apache-tomcat-8.0.30/webapps
+        """
+
+      }
+    }
+    stage('service_start') {
+      steps {
+        bat """
+        net start Tomcat8
+        """
+
+      }
+    }		
+
+  }
+}
