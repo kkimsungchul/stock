@@ -125,10 +125,26 @@ public class ParsingService {
             String parsingDateDetail = dateService.getTime("yyyyMMddHHmmss");
             parsingVO.setParsingDateDetail(parsingDateDetail);
             hashMap.put("종목명",elements.get(1).text());
+            log.info("종목명 : {}", hashMap.get("종목명"));
             String []stockName = elements.get(1).text().split("\\s");
-            parsingVO.setStockName(stockName[1]);
+
+            //주식 이름이 띄어쓰기가 있는 경우가 있어서 작성함
+            if(stockName.length>2){
+                String tempName="";
+                for(int i=1; i<stockName.length;i++){
+                    tempName += stockName[i];
+                    if(i!=stockName.length-1){
+                        tempName+=" ";
+                    }
+                }
+                parsingVO.setStockName(tempName);
+            }else{
+                parsingVO.setStockName(stockName[1]);
+            }
+
             hashMap.put("종목코드",elements.get(2).text());
             String []stockCategory = elements.get(2).text().split("\\s");
+            log.info("parsingVO.getStockName : {}", parsingVO.getStockName());
             if(stockCategory.length>2){
                 if(stockCategory[2].equals("코스피")){
                     parsingVO.setStockCategoryCode(1);
@@ -204,7 +220,6 @@ public class ParsingService {
 
     /**
      * DB에 저장된 주식종목 코드목록으로 parsingOneStock 메소드를 호출
-     * @param void
      * @return int
      * */
     public int saveParsingData() throws Exception{
@@ -270,6 +285,8 @@ public class ParsingService {
             //외인 기관 매수정보
             //외읜 기관 매수정보가 없을 경우 오류발생 예방
             if(doc.select("div.sub_section.right table.tb_type1 tbody tr").size()>1){
+
+                //여기 수정해야됨, 이거 전일꺼 가져옴;; 애만 당일께 아니라 전일대비를 가져오고 있음. 이부분 수정 필요함
                 Element element = doc.select("div.sub_section.right table.tb_type1 tbody tr").get(1);
                 String []directionAndGap =element.select("td em").get(1).text().split("\\s");
                 parsingVO.setDirection(directionAndGap[0]);
@@ -553,7 +570,6 @@ public class ParsingService {
     
     /**
      * 금일 파싱 작업을 실행한 로그가 있는지 확인
-     * @param void
      * @return List<ParsingScheduleVO>
      */
     public List<ParsingScheduleVO> getParsingScheduleLog() {
