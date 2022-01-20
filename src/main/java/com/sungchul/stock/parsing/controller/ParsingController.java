@@ -71,7 +71,9 @@ public class ParsingController {
     public ResponseEntity<ResponseAPI> parsingOneStock(@PathVariable("stockCode") String stockCode) throws Exception{
         HashMap<String,Object> hashMap = new HashMap<>();
         ResponseAPI responseAPI = new ResponseAPI();
-        ParsingVO parsingVO = parsingService.parsingOneStock(stockCode);
+        StockVO stockVO = new StockVO();
+        stockVO.setStockCode(stockCode);
+        ParsingVO parsingVO = parsingService.parsingOneStock(stockVO,2);
         hashMap.put("parsingData",parsingVO);
 
         responseAPI.setData(hashMap);

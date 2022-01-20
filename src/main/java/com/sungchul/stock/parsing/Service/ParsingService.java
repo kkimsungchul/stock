@@ -42,176 +42,17 @@ public class ParsingService {
 
     /**
      * CSV 저장된 주식종목 코드목록으로 parsingOneStock 메소드를 호출하여 실행시에 해당하는 주식 정보를 파싱
-     * @param void
      * @return List<ParsingVO>
      * */
     public List<ParsingVO> parsingAllStock() throws Exception{
         List<List<String>> stockList = csvService.readStockList();
         List<ParsingVO> parsingList = new ArrayList<>();
+        StockVO stockVO = new StockVO();
         for(List list: stockList){
-             parsingList.add(parsingOneStock(list.get(0).toString()));
+            stockVO.setStockCode(list.get(0).toString());
+             parsingList.add(parsingOneStock(stockVO,2));
         }
         return parsingList;
-    }
-
-    /**
-     * 입력받은 주식코드로 정보를 파싱
-     * @param  stockCode
-     * @return ParsingVO
-     * */
-    public ParsingVO parsingOneStock(String stockCode)throws Exception{
-
-        ParsingVO parsingVO = new ParsingVO();
-        LinkedHashMap<String,String> hashMap = new LinkedHashMap<>();
-        String url = "https://finance.naver.com/item/main.naver?code="+stockCode;
-
-        parsingVO.setStockCode(stockCode);
-
-        //HTML페이지 전체를 가져옴
-        Document doc = Jsoup.connect(url).get();
-        //가져온 HTMl문서에서 ID가 wrap인 태그에 속하는 부분만 가져옴
-
-        try {
-
-            if(doc.select("#wrap").select("dl").toString().length()==0){
-                parsingVO.setParsingMemo("해당 주식정보가 존재하지 않음");
-                return parsingVO;
-            }
-            //주식 기본 정보
-            Elements elements = doc.select("#wrap").select("dl").get(0).select("dd");
-            //외인 기관 매수정보
-            //외읜 기관 매수정보가 없을 경우 오류발생 예방
-            if(doc.select("div.sub_section.right table.tb_type1 tbody tr").size()>1){
-                Element element = doc.select("div.sub_section.right table.tb_type1 tbody tr").get(1);
-                hashMap.put("날짜",element.select("th").text());
-                hashMap.put("상승폭",element.select("td em").get(1).text());
-                String []directionAndGap =element.select("td em").get(1).text().split("\\s");
-
-                parsingVO.setDirection(directionAndGap[0]);
-
-                if(directionAndGap.length>1){
-                    parsingVO.setPriceGap(conversionINT(directionAndGap[1]));
-                }else{
-                    parsingVO.setPriceGap(0);
-                }
-                //directionCode
-                if(directionAndGap[0].equals("상향")){
-                    parsingVO.setDirectionCode(1);
-                }else if(directionAndGap[0].equals("하향")){
-                    parsingVO.setDirectionCode(2);
-                    parsingVO.setPriceGap( parsingVO.getPriceGap()*-1);
-                }else if(directionAndGap[0].equals("보합")){
-                    parsingVO.setDirectionCode(3);
-                }else{
-                    parsingVO.setDirectionCode(0);
-                }
-
-
-                hashMap.put("외국인 매매",element.select("td em").get(2).text());
-                parsingVO.setForeignTrade(conversionINT(element.select("td em").get(2).text()));
-
-                hashMap.put("기관 매매",element.select("td em").get(3).text());
-                parsingVO.setInstitutionTrade(conversionINT(element.select("td em").get(3).text()));
-
-
-            }else{
-                parsingVO.setDirection("");
-                parsingVO.setForeignTrade(0);
-                parsingVO.setInstitutionTrade(0);
-            }
-            parsingVO.setParsingDate(dateService.getTime("yyyyMMdd"));
-            hashMap.put("기준",elements.get(0).text());
-            //String parsingDateDetail = elements.get(0).text().replaceAll("[^0-9]","");
-            String parsingDateDetail = dateService.getTime("yyyyMMddHHmmss");
-            parsingVO.setParsingDateDetail(parsingDateDetail);
-            hashMap.put("종목명",elements.get(1).text());
-            log.info("종목명 : {}", hashMap.get("종목명"));
-            String []stockName = elements.get(1).text().split("\\s");
-
-            //주식 이름이 띄어쓰기가 있는 경우가 있어서 작성함
-            if(stockName.length>2){
-                String tempName="";
-                for(int i=1; i<stockName.length;i++){
-                    tempName += stockName[i];
-                    if(i!=stockName.length-1){
-                        tempName+=" ";
-                    }
-                }
-                parsingVO.setStockName(tempName);
-            }else{
-                parsingVO.setStockName(stockName[1]);
-            }
-
-            hashMap.put("종목코드",elements.get(2).text());
-            String []stockCategory = elements.get(2).text().split("\\s");
-            log.info("parsingVO.getStockName : {}", parsingVO.getStockName());
-            if(stockCategory.length>2){
-                if(stockCategory[2].equals("코스피")){
-                    parsingVO.setStockCategoryCode(1);
-                    parsingVO.setStockCategoryName(stockCategory[2]);
-                }else if(stockCategory[2].equals("코스닥")){
-                    parsingVO.setStockCategoryCode(2);
-                    parsingVO.setStockCategoryName(stockCategory[2]);
-                }
-            }else{
-                parsingVO.setStockCategoryCode(3);
-                parsingVO.setStockCategoryName("코넥스");
-            }
-            hashMap.put("현재가",elements.get(3).text());
-            String []presentPrice = elements.get(3).text().split("\\s");
-            parsingVO.setPresentPrice(Integer.parseInt(presentPrice[1].replace(",","")));
-
-            hashMap.put("전일가",elements.get(4).text());
-            String []yesterdayPrice = elements.get(4).text().split("\\s");
-            parsingVO.setYesterdayPrice(Integer.parseInt(yesterdayPrice[1].replace(",","")));
-
-            hashMap.put("시가",elements.get(5).text());
-            String []currentPrice = elements.get(5).text().split("\\s");
-            parsingVO.setCurrentPrice(Integer.parseInt(currentPrice[1].replace(",","")));
-
-            hashMap.put("고가",elements.get(6).text());
-            String []highPrice = elements.get(6).text().split("\\s");
-            parsingVO.setHighPrice(Integer.parseInt(highPrice[1].replace(",","")));
-
-            hashMap.put("상한가",elements.get(7).text());
-            String []upperLimitPrice = elements.get(7).text().split("\\s");
-            parsingVO.setUpperLimitPrice(Integer.parseInt(upperLimitPrice[1].replace(",","")));
-
-            hashMap.put("저가",elements.get(8).text());
-            String []lowPrice = elements.get(8).text().split("\\s");
-            parsingVO.setLowPrice(Integer.parseInt(lowPrice[1].replace(",","")));
-
-            hashMap.put("하한가",elements.get(9).text());
-            String []lowerLimitPrice = elements.get(9).text().split("\\s");
-            parsingVO.setLowerLimitPrice(Integer.parseInt(lowerLimitPrice[1].replace(",","")));
-
-            hashMap.put("거래량",elements.get(10).text());
-            String []tradingVolume = elements.get(10).text().split("\\s");
-            parsingVO.setTradingVolume(Integer.parseInt(tradingVolume[1].replace(",","")));
-
-            hashMap.put("거래대금",elements.get(11).text());
-            String []tradingValue = elements.get(11).text().split("\\s");
-            parsingVO.setTradingValue(tradingValue[1]);
-
-
-
-
-
-            //per가져옴
-            if(doc.select(".per_table tbody tr td").size()>=1) {
-                Element elementPer = doc.select(".per_table tbody tr td").get(0);
-                parsingVO.setPer(conversionDouble(elementPer.select("em").get(0).text()));
-                parsingVO.setEps(conversionDouble(elementPer.select("em").get(1).text()));
-            }
-
-
-
-        }catch (Exception e){
-            log.info("#### Exception : {}" , e);
-            System.out.println(parsingVO);
-        }finally {
-            return parsingVO;
-        }
     }
 
 
@@ -243,7 +84,8 @@ public class ParsingService {
         List<StockVO> stockList = stockDataMapper.getStockCode();
         int insertCouint=0;
         for(StockVO stockVO: stockList){
-            insertCouint =+ parsingOneStock(stockVO);
+            parsingOneStock(stockVO,1);
+            insertCouint++;
         }
 
         parsingScheduleVO.setEndTime(dateService.getTime("yyyyMMddHHmmss"));
@@ -259,9 +101,10 @@ public class ParsingService {
     /**
      * 전달받은 주식종목 정보를 토대로 데이터를 파싱하여 DB에 저장
      * @param stockVO
+     * @param flag , 구분값 1: DB 저장 , 2 : 한종목 파싱
      * @return ParsingVO
      * */
-    public int parsingOneStock(StockVO stockVO)throws Exception{
+    public ParsingVO parsingOneStock(StockVO stockVO , int flag)throws Exception{
 
         ParsingVO parsingVO = new ParsingVO();
         LinkedHashMap<String,String> hashMap = new LinkedHashMap<>();
@@ -278,37 +121,47 @@ public class ParsingService {
 
             if(doc.select("#wrap").select("dl").toString().length()==0){
                 parsingVO.setParsingMemo("해당 주식정보가 존재하지 않음");
-                return parsingMapper.insertParsingData(parsingVO);
+                if(flag==1) {
+                    parsingMapper.insertParsingData(parsingVO);
+                }
+                return parsingVO;
             }
             //주식 기본 정보
             Elements elements = doc.select("#wrap").select("dl").get(0).select("dd");
+
+            //금일 주식 정보를 가져옴
+
+            Element elementToday = doc.select(".today").get(0);
+
+            String []today = elementToday.text().split("\\s");
+            /*
+            System.out.println(elementToday);
+            System.out.println(elementToday.text());
+            * today[0] : 현재가
+            * today[1] : 현재가
+            * today[2] : 전일대비 (제목)
+            * today[3] : 상승,하락가격
+            * today[4] : 상승 하락 가격
+            * today[8] : 상승 하락 퍼센트
+            */
+            parsingVO.setDirection(today[3]);
+            //directionCode
+            parsingVO.setPriceGap(conversionINT(today[4]));
+            if(today[3].equals("상승")){
+                parsingVO.setDirectionCode(1);
+            }else if(today[3].equals("하락")){
+                parsingVO.setDirectionCode(2);
+                //하향일 경우 음수로 전환
+                parsingVO.setPriceGap(parsingVO.getPriceGap()*-1);
+            }else if(today[3].equals("보합")){
+                parsingVO.setDirectionCode(3);
+            }else{
+                parsingVO.setDirectionCode(0);
+            }
             //외인 기관 매수정보
-            //외읜 기관 매수정보가 없을 경우 오류발생 예방
+            //외인 기관 매수정보가 없을 경우 오류발생 예방
             if(doc.select("div.sub_section.right table.tb_type1 tbody tr").size()>1){
-
-                //여기 수정해야됨, 이거 전일꺼 가져옴;; 애만 당일께 아니라 전일대비를 가져오고 있음. 이부분 수정 필요함
                 Element element = doc.select("div.sub_section.right table.tb_type1 tbody tr").get(1);
-                String []directionAndGap =element.select("td em").get(1).text().split("\\s");
-                parsingVO.setDirection(directionAndGap[0]);
-                //directionCode
-                if(directionAndGap.length>1){
-                    parsingVO.setPriceGap(conversionINT(directionAndGap[1]));
-                }else{
-                    parsingVO.setPriceGap(0);
-                }
-
-                if(directionAndGap[0].equals("상향")){
-                    parsingVO.setDirectionCode(1);
-                }else if(directionAndGap[0].equals("하향")){
-                    parsingVO.setDirectionCode(2);
-                    //하향일 경우 음수로 전환
-                    parsingVO.setPriceGap(parsingVO.getPriceGap()*-1);
-                }else if(directionAndGap[0].equals("보합")){
-                    parsingVO.setDirectionCode(3);
-                }else{
-                    parsingVO.setDirectionCode(0);
-                }
-
                 parsingVO.setForeignTrade(conversionINT(element.select("td em").get(2).text()));
                 parsingVO.setInstitutionTrade(conversionINT(element.select("td em").get(3).text()));
 
@@ -319,7 +172,19 @@ public class ParsingService {
                 parsingVO.setInstitutionTrade(0);
             }
             String []stockName = elements.get(1).text().split("\\s");
-            parsingVO.setStockName(stockName[1]);
+            //주식 이름이 띄어쓰기가 있는 경우가 있어서 작성함
+            if(stockName.length>2){
+                String tempName="";
+                for(int i=1; i<stockName.length;i++){
+                    tempName += stockName[i];
+                    if(i!=stockName.length-1){
+                        tempName+=" ";
+                    }
+                }
+                parsingVO.setStockName(tempName);
+            }else{
+                parsingVO.setStockName(stockName[1]);
+            }
             String []stockCategory = elements.get(2).text().split("\\s");
             if(stockCategory.length>2){
                 if(stockCategory[2].equals("코스피")){
@@ -381,7 +246,11 @@ public class ParsingService {
             log.info("#### Exception : {}" , e);
             System.out.println(parsingVO);
         }
-        return parsingMapper.insertParsingData(parsingVO);
+        if(flag==1){
+            parsingMapper.insertParsingData(parsingVO);
+        }
+
+        return parsingVO;
     }
 
 
@@ -558,7 +427,7 @@ public class ParsingService {
 
     /**
      * 파싱 작업 로그 저장
-     * @param ParsingScheduleVO
+     * @param parsingScheduleVO
      * @return viod
      */
     public void saveParsingScheduleLog(ParsingScheduleVO parsingScheduleVO){
