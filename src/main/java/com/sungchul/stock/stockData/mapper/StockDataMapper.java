@@ -2,6 +2,8 @@ package com.sungchul.stock.stockData.mapper;
 
 
 import com.sungchul.stock.parsing.vo.ParsingVO;
+import com.sungchul.stock.stockData.vo.SearchParamVO;
+import com.sungchul.stock.stockData.vo.SearchVO;
 import com.sungchul.stock.stockData.vo.StockVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -21,4 +23,6 @@ public interface StockDataMapper {
     List<HashMap<String,String>> getSearchStockName(String stockName);
 
     List<ParsingVO> getSearchStock(StockVO stockVO);
+
+    List<SearchParamVO> stockFlow(SearchVO searchVO);
 }

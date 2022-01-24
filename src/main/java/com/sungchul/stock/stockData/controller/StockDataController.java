@@ -2,6 +2,8 @@ package com.sungchul.stock.stockData.controller;
 
 import com.sungchul.stock.common.ResponseAPI;
 import com.sungchul.stock.parsing.vo.ParsingVO;
+import com.sungchul.stock.stockData.vo.SearchParamVO;
+import com.sungchul.stock.stockData.vo.SearchVO;
 import com.sungchul.stock.stockData.vo.StockVO;
 import com.sungchul.stock.stockData.service.StockDataService;
 import io.swagger.annotations.*;
@@ -31,7 +33,7 @@ public class StockDataController {
     @ApiOperation(
             httpMethod = "GET",
             response = ResponseAPI.class,
-            value="해당 주식종목의 정보를 가져옴" ,
+            value="DB에 저장되어 있는 해당 주식종목의 정보를 가져옴" ,
             notes="해당 API 호출시 데이터베이스에서 입력한 주식종목코드에 대한 파싱해둔 데이터를 리턴해줌")
     @ApiImplicitParams({
             @ApiImplicitParam(name="stockCode" , value = "주식 종목 코드", defaultValue = "005930")
@@ -126,4 +128,32 @@ public class StockDataController {
         return new ResponseEntity<>(responseAPI, HttpStatus.OK);
 
     }
+
+
+
+    @GetMapping("/stockFlow")
+    @ApiOperation(
+            httpMethod = "GET",
+            response = ResponseAPI.class,
+            value="상승,하락 구분값과 working day 를 기준으로 상승중인 종목과 하락중인 종목을 가져옴" ,
+            notes="상승,하락 구분값과 working day 를 기준으로 상승중인 종목과 하락중인 종목을 가져옴")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = Map.class),
+            @ApiResponse(code = 403, message = "접근거부", response = HttpClientErrorException.Forbidden.class),
+            @ApiResponse(code = 500, message = "서버 에러", response = ServerError.class),
+    })
+    public ResponseEntity<ResponseAPI> getStockFlow(SearchVO searchVO){
+        System.out.println("### searchVO : " + searchVO);
+
+        HashMap<String,Object> hashMap = new HashMap<>();
+        ResponseAPI responseAPI = new ResponseAPI();
+        List<SearchParamVO> flowList = stockDataService.stockFlow(searchVO);
+        hashMap.put("flowList",flowList);
+
+        responseAPI.setData(hashMap);
+        return new ResponseEntity<>(responseAPI, HttpStatus.OK);
+    }
+
+
+
 }

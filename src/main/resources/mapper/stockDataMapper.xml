@@ -51,13 +51,12 @@
         WHERE stock_name LIKE CONCAT('%',#{stockName},'%')
     </select>
 
-    <select id="recommendFlow" resultType="HashMap">
-        SELECT stock_name , count(stock_name) AS cnt FROM parsing_data
-        WHERE direction_code=#{direction_code}
-        AND parsing_date IN (SELECT temp_date FROM (SELECT parsing_date AS temp_date FROM parsing_data GROUP BY parsing_date ORDER BY parsing_date DESC  LIMIT #{cnt})as temp)
+    <select id="stockFlow"  parameterType="com.sungchul.stock.stockData.vo.SearchVO" resultType="com.sungchul.stock.stockData.vo.SearchParamVO">
+        SELECT stock_name , count(stock_name) AS flow_cnt FROM parsing_data
+        WHERE direction_code=#{directionCode}
+        AND parsing_date IN (SELECT temp_date FROM (SELECT parsing_date AS temp_date FROM parsing_data GROUP BY parsing_date ORDER BY parsing_date DESC  LIMIT #{workingDay})as temp)
         GROUP BY stock_name
-        ORDER BY cnt desc;
-
+        ORDER BY flow_cnt desc;
     </select>
 
 

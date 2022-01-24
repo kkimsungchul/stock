@@ -108,4 +108,12 @@ public class ParsingVO {
     @JsonProperty("parsing_memo")
     private  String parsingMemo;
 
+
+    //검색 시 반환해주는 값
+    @ApiModelProperty(name = "flow_cnt", value = "상승횟수 또는 하락 횟수", notes = "상승일경우 상승횟수, 하락일 경우 하락 횟수를 나타냄", example = "5")
+    @JsonProperty("flow_cnt")
+    private int flow_cnt;
+
+
+
 }

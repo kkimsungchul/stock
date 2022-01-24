@@ -1,6 +1,8 @@
 package com.sungchul.stock.stockData.service;
 
 import com.sungchul.stock.parsing.vo.ParsingVO;
+import com.sungchul.stock.stockData.vo.SearchParamVO;
+import com.sungchul.stock.stockData.vo.SearchVO;
 import com.sungchul.stock.stockData.vo.StockVO;
 import com.sungchul.stock.stockData.mapper.StockDataMapper;
 import lombok.AllArgsConstructor;
@@ -46,8 +48,23 @@ public class StockDataService {
     public List<HashMap<String,String>> getSearchStockName(String stockName){
         return stockDataMapper.getSearchStockName(stockName);
     }
+
+    /**
+     * 입력한 주식 정보로 해당 주식 코드를 가져옴
+     * @param stockVO
+     * @return List<ParsingVO>
+     * */
     public List<ParsingVO> getSearchStock(StockVO stockVO){
         return stockDataMapper.getSearchStock(stockVO);
+    }
+
+    /**
+     * 입력한 정보로 상승중인 주식과 하락중인 주식을 가져옴
+     * @param searchVO
+     * @return List<ParsingVO>
+     * */
+    public List<SearchParamVO> stockFlow(SearchVO searchVO){
+        return stockDataMapper.stockFlow(searchVO);
     }
 
 
