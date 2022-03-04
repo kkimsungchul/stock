@@ -58,7 +58,11 @@ dependencies {
     //jwt
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    
 
+    //commons-configuration2 실시간 프로퍼티 변경 감지 - 현재 사용 안하고있음 2022-02-08
+    compile ('org.apache.commons:commons-configuration2:2.1')
+    compile ('commons-beanutils:commons-beanutils:1.9.3')
 
 }
 

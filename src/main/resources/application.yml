@@ -47,7 +47,7 @@ swagger :
   enable : true
 
 test :
-  testword1 : hihihihi
+  testword1 : aaaadasdsfdgsgdf
   testword2 : byebyebyebye
 ---
 
