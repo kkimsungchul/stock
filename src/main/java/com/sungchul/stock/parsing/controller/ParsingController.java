@@ -4,7 +4,6 @@ package com.sungchul.stock.parsing.controller;
 import com.sungchul.stock.common.ResponseAPI;
 import com.sungchul.stock.csv.service.CSVService;
 import com.sungchul.stock.parsing.Service.ParsingService;
-import com.sungchul.stock.parsing.vo.ParsingScheduleVO;
 import com.sungchul.stock.parsing.vo.ParsingVO;
 import com.sungchul.stock.stockData.vo.StockVO;
 import io.swagger.annotations.*;
@@ -12,13 +11,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.rmi.ServerError;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
