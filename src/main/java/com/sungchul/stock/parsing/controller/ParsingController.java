@@ -105,6 +105,21 @@ public class ParsingController {
     }
 
 
+//    @GetMapping("/stock")
+//    @ApiOperation( httpMethod = "GET",value="전체주식종목 CSV 파일을 다운받음" , notes="KRX 사이트에서 제공해주는 주식 종목 csv 파일을 다운로드함")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "성공", response = Map.class),
+//            @ApiResponse(code = 403, message = "접근거부", response = HttpClientErrorException.Forbidden.class),
+//            @ApiResponse(code = 500, message = "서버 에러", response = ServerError.class),
+//    })
+//    public void stockListDownload()throws Exception{
+//
+//        parsingService.stockListDownload();
+//
+//    }
+
+
+
     
     
     

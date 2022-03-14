@@ -25,4 +25,6 @@ public interface ParsingMapper {
     int saveParsingScheduleLog(ParsingScheduleVO parsingScheduleVO);
     
     List<ParsingScheduleVO>getParsingScheduleLog(ParsingScheduleVO parsingScheduleVO);
+
+    int deleteStockInfo();
 }

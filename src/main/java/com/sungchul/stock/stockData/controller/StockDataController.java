@@ -23,7 +23,7 @@ import java.util.Map;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@Api(tags = {"DB에 저장되어 있는 파싱 데이터를 제공해주는 Controller"})
+@Api(tags = {"DB에 저장되어 있는 주식 파싱 데이터를 제공해주는 Controller"})
 @RequestMapping("/stockData")
 public class StockDataController {
 
@@ -153,7 +153,4 @@ public class StockDataController {
         responseAPI.setData(hashMap);
         return new ResponseEntity<>(responseAPI, HttpStatus.OK);
     }
-
-
-
 }

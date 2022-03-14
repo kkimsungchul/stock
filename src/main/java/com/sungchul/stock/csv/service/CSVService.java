@@ -31,11 +31,10 @@ public class CSVService {
 
     /**
      * CSV파일을 읽어와 주식 종목을 DB에 저장
-     * @param void
      * @return int
      * */
     public int saveStockList(){
-        File csv = new File("20211108_stockCode.csv");
+        File csv = new File("20220314_stockCode.csv");
         BufferedReader br = null;
         StockVO stockVO = new StockVO();
         int count = 0;
@@ -44,15 +43,20 @@ public class CSVService {
         try {
             br = new BufferedReader(new FileReader(csv));
             Charset.forName("UTF-8");
-            String line = "";
+            String line = null;
             int i=0;
             while((line=br.readLine()) != null) {
+                if(i==0){
+                    i++;
+                    //기존목록 삭제
+                    int deleteCount = parsingMapper.deleteStockInfo();
+                    log.info("stock_list table row delete : {}" , deleteCount);
+                    continue;
+                }
                 String[] tempToken = line.split("\",\"");
                 for(int z = 0; z<tempToken.length;z++){
                     tempToken[z] = tempToken[z].replaceAll("\"","");
-                    System.out.println(tempToken[z]);
                 }
-                System.out.println("###########");
                 //배열 순서
                 //표준코드,단축코드,한글 종목명,한글 종목약명,영문 종목명,상장일,시장구분,증권구분,소속부,주식종류,액면가,상장주식수
                 stockVO.setStockLongCode(tempToken[0]);
@@ -70,24 +74,26 @@ public class CSVService {
                     stockVO.setStockCategoryCode(0);
                 }
 
-
                 stockVO.setInsertDate(dateService.getTime("yyyyMMddHHmmss"));
                 if(parsingMapper.insertStockInfo(stockVO)==1){
                     count++;
                 }else{
                     errorCount++;
                 }
+                count++;
             }
 
         } catch (FileNotFoundException e) {
-            log.info("Error : {}",e);
+            log.error("Error : {}",e);
         } catch (IOException e) {
-            log.info("Error : {}",e);
+            log.error("Error : {}",e);
         } finally {
             try {
-                if(br != null) {br.close();}
+                if(br != null) {
+                    br.close();
+                }
             } catch (IOException e) {
-                log.info("Error : {}",e);
+                log.error("Error : {}",e);
             }
         }
 
@@ -98,7 +104,6 @@ public class CSVService {
 
     /**
      * CSV파일을 읽어서 주식 코드를 리턴
-     * @param void
      * @return List<List<String>>
      * */
     public List<List<String>> readStockList() {

@@ -13,6 +13,10 @@
         VALUES (#{stockCode} , #{stockLongCode} , #{stockName} , #{stockCategoryCode} , #{stockCategoryName} , #{insertDate})
     </insert>
 
+    <delete id="deleteStockInfo">
+        DELETE FROM stock_list
+    </delete>
+
     <insert id="insertParsingData" parameterType="com.sungchul.stock.parsing.vo.ParsingVO">
         INSERT IGNORE INTO parsing_data
             (stock_code ,parsing_date_detail ,parsing_date ,stock_name ,stock_category_code

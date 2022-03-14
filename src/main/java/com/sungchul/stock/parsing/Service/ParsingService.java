@@ -14,10 +14,25 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StopWatch;
+import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -50,7 +65,7 @@ public class ParsingService {
         StockVO stockVO = new StockVO();
         for(List list: stockList){
             stockVO.setStockCode(list.get(0).toString());
-             parsingList.add(parsingOneStock(stockVO,2));
+            parsingList.add(parsingOneStock(stockVO,2));
         }
         return parsingList;
     }
@@ -72,12 +87,12 @@ public class ParsingService {
 //        if(dateService.getWeekDay()== 1 || dateService.getWeekDay()== 7){
 //            return 0;
 //        }
-        
+
         //작동한 적이 있으면 다시 작동하지 않도록 설정
         if(getParsingScheduleLog().size()!=0) {
-        	return 0;
+            return 0;
         };
-        
+
         stopWatch.start();
         parsingScheduleVO.setStartTime(dateService.getTime("yyyyMMddHHmmss"));
 
@@ -435,20 +450,20 @@ public class ParsingService {
 
         parsingMapper.saveParsingScheduleLog(parsingScheduleVO);
     }
-    
-    
+
+
     /**
      * 금일 파싱 작업을 실행한 로그가 있는지 확인
      * @return List<ParsingScheduleVO>
      */
     public List<ParsingScheduleVO> getParsingScheduleLog() {
-    	ParsingScheduleVO parsingScheduleVO = new ParsingScheduleVO();
-    	parsingScheduleVO.setScheduleDate(dateService.getTime("yyyyMMdd"));
-    	//parsingScheduleVO.setScheduleDate("20220110");
-    	
-   	
-    	
-    	return parsingMapper.getParsingScheduleLog(parsingScheduleVO);
+        ParsingScheduleVO parsingScheduleVO = new ParsingScheduleVO();
+        parsingScheduleVO.setScheduleDate(dateService.getTime("yyyyMMdd"));
+        //parsingScheduleVO.setScheduleDate("20220110");
+
+
+
+        return parsingMapper.getParsingScheduleLog(parsingScheduleVO);
     }
 
     public void mapperTest(){
@@ -474,4 +489,87 @@ public class ParsingService {
     }
 
 
+
+
+
+    /*원격 파일다운로드 시작 , 사용하지 않고 있음*/
+    public String stockListDownload(){
+        String url="http://data.krx.co.kr//comm/fileDn/download_csv/download.cmd";
+        String dir="c:\\temp";
+        try {
+            downloadToDir(new URL(url), new File(dir));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+    /** 정해진 file로 url의 내용을 저장한다. (저장되는 파일명은 url과 무관함)  **/
+    public void downloadToFile(URL url, File savedFile) throws IOException {
+        if (url==null) throw new IllegalArgumentException("url is null.");
+        if (savedFile==null) throw new IllegalArgumentException("savedFile is null.");
+        if (savedFile.isDirectory()) throw new IllegalArgumentException("savedFile is a directory.");
+        downloadTo(url, savedFile, false);
+    }
+
+    /** 정해진 디렉토리로 url의 내용을 저장한다. (저장되는 파일명이 url에 따라서 달라짐) **/
+    public void downloadToDir(URL url, File dir) throws IOException {
+        if (url==null) throw new IllegalArgumentException("url is null.");
+        if (dir==null) throw new IllegalArgumentException("directory is null.");
+        if (!dir.exists()) throw new IllegalArgumentException("directory is not existed.");
+        if (!dir.isDirectory()) throw new IllegalArgumentException("directory is not a directory.");
+        downloadTo(url, dir, true);
+    }
+
+    private void downloadTo(URL url, File targetFile, boolean isDirectory) throws IOException{
+
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        int responseCode = httpConn.getResponseCode();
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            String fileName = "";
+            String disposition = httpConn.getHeaderField("Content-Disposition");
+            File saveFilePath=null;
+
+            if (isDirectory) {
+                if (disposition != null) {
+                    int index = disposition.indexOf("filename=");
+                    if (index > 0) {
+                        fileName = disposition.substring(index + 10,
+                                disposition.length() - 1);
+                    }
+                } else {
+                    String fileURL=url.toString();
+                    fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
+                    int questionIdx=fileName.indexOf("?");
+                    if (questionIdx>=0) {
+                        fileName=fileName.substring(0, questionIdx);
+                    }
+                    fileName= URLDecoder.decode(fileName);
+                }
+                saveFilePath = new File(targetFile, fileName);
+            }
+            else {
+                saveFilePath=targetFile;
+            }
+
+            InputStream inputStream = httpConn.getInputStream();
+
+            FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+
+            int bytesRead = -1;
+            byte[] buffer = new byte[4096];
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            outputStream.close();
+            inputStream.close();
+            System.out.println("File downloaded to " + saveFilePath);
+        } else {
+            System.err.println("No file to download. Server replied HTTP code: " + responseCode);
+        }
+        httpConn.disconnect();
+    }
+    /*원격 파일다운로드 종료 , 사용하지 않고 있음*/
 }
