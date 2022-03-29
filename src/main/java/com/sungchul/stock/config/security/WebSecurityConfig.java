@@ -58,11 +58,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 // dont authenticate this particular request
                 .authorizeRequests()
-                //전부다허용
-                .antMatchers("/**").permitAll()
 
+                // 2022.03.29 접근제한부분 주석 작성
+                //아래의 전부다 허용을 하면 토큰 없이 접근 가능,
+                //전부다허용
+                //.antMatchers("/**").permitAll()
+
+                //아래의 전부다 허용을 하면 토큰이 있어야 접근 가능
                 //접근제한
-                //.antMatchers("/","/csrf","/authenticate","/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
+                .antMatchers("/","/csrf","/authenticate","/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
 
                 .antMatchers("/user","/user/**").hasRole("ADMIN")
                 // all other requests need to be authenticated
