@@ -41,15 +41,6 @@ public class ParsingController {
         return new ResponseEntity<>(responseAPI,HttpStatus.OK);
     }
 
-//    @GetMapping("/parsing/{stockCode}")
-//    @ApiOperation(value="한 종목 파싱" , notes="해당 API 호출 시 입력한 종목코드에 대한 정보를 리턴")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name="stockCode" , value = "주식 종목 코드", defaultValue = "005930")
-//    })
-//    public ResponseEntity<ParsingVO> parsingOneStock(@PathVariable("stockCode") String stockCode) throws Exception{
-//        ParsingVO parsingVO = parsingService.parsingOneStock(stockCode);
-//        return new ResponseEntity<>(parsingVO, HttpStatus.OK);
-//    }
 
     @GetMapping("/{stockCode}")
     @ApiOperation(
@@ -116,23 +107,6 @@ public class ParsingController {
 //
 //        parsingService.stockListDownload();
 //
-//    }
-
-
-
-    
-    
-    
-//    @GetMapping("/getParsingScheduleLog")
-//    public List<ParsingScheduleVO> getParsingScheduleLog(){
-//    	
-//    	return parsingService.getParsingScheduleLog();
-//    }
-
-
-//    @GetMapping("/csvReadStockList")
-//    public void csvReadStockList(){
-//        csvService.readStockList();
 //    }
 
 
