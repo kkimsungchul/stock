@@ -17,7 +17,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.rmi.ServerError;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -97,7 +100,17 @@ public class TestController {
         return "hihihi";
     }
 
+    @PostMapping(value="uploadFile")
+    public ResponseEntity<String> uploadFile(MultipartFile file) throws IllegalStateException, IOException {
+        log.info("file org name = {}", "파일 ㄱㄱ");
+        if( !file.isEmpty() ) {
+            log.info("file org name = {}", file.getOriginalFilename());
+            log.info("file content type = {}", file.getContentType());
+            file.transferTo(new File(file.getOriginalFilename()));
+        }
 
+        return new ResponseEntity<>("", HttpStatus.OK);
+    }
 
 
 
