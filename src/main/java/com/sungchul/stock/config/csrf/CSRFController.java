@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 //https://stackoverflow.com/questions/55582023/when-loading-the-swagger-ui-html-page-a-request-is-made-to-hostport-and-host
 @Controller
 public class CSRFController {
+    
     @RequestMapping(value = "/csrf", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public ResponseEntity<CsrfToken> getToken(final HttpServletRequest request) {
         return ResponseEntity.ok().body(new HttpSessionCsrfTokenRepository().generateToken(request));
