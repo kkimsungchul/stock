@@ -74,8 +74,8 @@ test {
 }
 
 
-bootWar{
-    archiveBaseName = '-'
-    archiveFileName = 'ROOT.war'
-    archiveVersion ='0.0.0'
-}
+//bootWar{
+//    archiveBaseName = '-'
+//    archiveFileName = 'ROOT.war'
+//    archiveVersion ='0.0.0'
+//}
