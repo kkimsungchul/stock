@@ -17,7 +17,7 @@ spring :
     #url: jdbc:log4jdbc:mysql://mysql:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8
 
     #useSSL=false docker 에서 오류발생으로 추가
-    url: jdbc:log4jdbc:mysql://172.18.0.2:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&autoReconnect=true
+    url: jdbc:log4jdbc:mysql://mysql:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8
 
 
     #로그 없이 작동 - 개발 MSSQL
