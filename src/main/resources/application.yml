@@ -14,7 +14,7 @@ spring :
     #url: jdbc:mysql://localhost:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8
     #로그 표시하며 작동 - 개발
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    #url: jdbc:log4jdbc:mysql://localhost:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8
+    #url: jdbc:log4jdbc:mysql://mysql:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8
     url: jdbc:log4jdbc:mysql://127.0.0.11:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8
 
 
