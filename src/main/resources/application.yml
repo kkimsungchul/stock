@@ -10,14 +10,14 @@ spring :
     timeout: 600
   datasource:
     #로그 없이 작동 - 개발 MYSQL
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.11:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&autoReconnect=true
+    #driver-class-name: com.mysql.cj.jdbc.Driver
+    #url: jdbc:mysql://localhost:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8
     #로그 표시하며 작동 - 개발
-    #driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     #url: jdbc:log4jdbc:mysql://mysql:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8
 
     #useSSL=false docker 에서 오류발생으로 추가
-    #url: jdbc:log4jdbc:mysql://127.0.0.11:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&autoReconnect=true
+    url: jdbc:log4jdbc:mysql://172.18.0.1:3306/stock?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&autoReconnect=true
 
 
     #로그 없이 작동 - 개발 MSSQL
