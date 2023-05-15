@@ -41,5 +41,4 @@ public class ResponseAPI {
         this.timestamp = LocalDateTime.now();
         this.data = new HashMap<>();
     }
-
 }
